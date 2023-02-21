@@ -1,0 +1,35 @@
+<!-- Copyright (c) Microsoft Corporation and Contributors. -->
+<!-- Licensed under the MIT License. -->
+
+<Window
+    x:Class="LeaderPivot.XAML.WinUI.Host.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:LeaderPivot.XAML.WinUI.Host"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:leaderPivot="using:LeaderAnalytics.LeaderPivot.XAML.WinUI"
+    mc:Ignorable="d">
+
+    <Grid Background="CornflowerBlue">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="150"/>
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
+        <local:ControlPanel x:Name="controlPanel"/>
+
+        <Border Grid.Row="1">
+
+            <leaderPivot:LeaderPivotControl BorderThickness="6" BorderBrush="Silver" Margin="20"
+                    DisplayGrandTotalOption="{x:Bind controlPanel.DisplayGrandTotalOption, Mode=TwoWay}"
+                    DisplayDimensionButtons="{x:Bind controlPanel.DisplayDimensionButtons, Mode=TwoWay}"
+                    DisplayMeasureSelectors="{x:Bind controlPanel.DisplayMeasureSelectors, Mode=TwoWay}"
+                    DisplayReloadDataButton="{x:Bind controlPanel.DisplayReloadDataButton, Mode=TwoWay}"
+                    FontSize="{x:Bind controlPanel.PivotControlFontSize, Mode=TwoWay}"
+                    CellPadding="{x:Bind controlPanel.CellPadding, Mode=TwoWay}"
+                    ViewBuilder="{x:Bind VM.ViewBuilder}"
+                    IsBusy="{x:Bind VM.IsBusy}"/>
+        </Border>
+    </Grid>
+</Window>

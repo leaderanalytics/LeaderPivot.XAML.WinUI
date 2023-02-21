@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "LeaderPivot.XAML.WinUI.Host (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "LeaderPivot.XAML.WinUI.Host (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}
