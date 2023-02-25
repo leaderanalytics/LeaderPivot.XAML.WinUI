@@ -121,7 +121,7 @@
 
     <Style TargetType="local:MeasureLabelCell"  BasedOn="{StaticResource BaseCellStyle}">
         <!--<Style.Resources>
-            <Style TargetType="TextBlock" BasedOn="{StaticResource LeftTextBlockStyle}"></Style>
+        <Style TargetType="TextBlock" BasedOn="{StaticResource LeftTextBlockStyle}"></Style>
         </Style.Resources>-->
     </Style>
 
@@ -142,6 +142,7 @@
             <Style TargetType="TextBlock" BasedOn="{StaticResource LeftTextBlockStyle}"></Style>
         </Style.Resources>-->
     </Style>
+    
 
     <Style TargetType="local:GroupHeaderCell" >
         <Setter Property="Template">
@@ -149,14 +150,14 @@
                 <ControlTemplate TargetType="local:GroupHeaderCell">
                     <Border Background="{TemplateBinding Background}" ui:FrameworkElementExtensions.AncestorType="local:LeaderPivotControl"
                             BorderThickness="0"
-                            Padding="{Binding (ui:FrameworkElementExtensions.Ancestor).CellPadding}"
-                            DataContext="{Binding (ui:FrameworkElementExtensions.Ancestor)}">
+                            Padding="{Binding (ui:FrameworkElementExtensions.Ancestor).CellPadding, RelativeSource={RelativeSource Self}, Converter={StaticResource IntToThicknessConverter}}"
+                            DataContext="{Binding (ui:FrameworkElementExtensions.Ancestor), RelativeSource={RelativeSource Self}}">
                         <StackPanel Orientation="Horizontal">
                             
                             <Button ui:FrameworkElementExtensions.AncestorType="local:GroupHeaderCell" x:Name="b1"
-                                    DataContext="{Binding (ui:FrameworkElementExtensions.Ancestor)}"
+                                    DataContext="{Binding (ui:FrameworkElementExtensions.Ancestor), RelativeSource={RelativeSource Self}}"
                                     Command="{Binding ToggleNodeExpansionCommand}" CommandParameter="{Binding NodeID}"
-                                    Foreground="{Binding (ui:FrameworkElementExtensions.Ancestor).Foreground}"
+                                    Foreground="{Binding (ui:FrameworkElementExtensions.Ancestor).Foreground, RelativeSource={RelativeSource Self}}"
                                     Visibility="{Binding CanToggleExpansion, Converter={StaticResource BoolToVisibilityConverter}}">
                                 <Button.Resources>
                                     <Style TargetType="Border">
@@ -166,7 +167,7 @@
                                         <Setter Property="BorderThickness" Value="0"/>
                                         <Setter Property="Background" Value="Transparent"/>
                                         <Setter Property="Height" Value="25"/>
-                                        <Setter Property="Width" Value="25"/>
+                                        <Setter Property="Width" Value="50"/>
                                         <Setter Property="HorizontalAlignment" Value="Left"/>
                                         <Setter Property="VerticalAlignment" Value="top"/>
                                         <Setter Property="HorizontalContentAlignment" Value="Center"/>
@@ -176,30 +177,35 @@
                                         <Setter Property="Margin" Value="3"/>
                                     </Style>
                                 </Button.Resources>
+                                <VisualStateManager.VisualStateGroups>
+                                    <VisualStateGroup>
+                                        <VisualState>
+                                            <VisualState.StateTriggers>
+                                                <triggers:IsEqualStateTrigger Value="{Binding (ui:FrameworkElementExtensions.Ancestor).IsExpanded, RelativeSource={RelativeSource Self}, Mode=OneWay}"  To="True"/>
+                                            </VisualState.StateTriggers>
+                                            <VisualState.Setters>
+                                                <Setter Target="b1.Padding" Value="5,7,5,3"/>
+                                                <!--<Setter Target="b1.Content" Value="&#xE936;"/>-->
+                                                <Setter Target="b1.Content" Value="True"/>
+                                                <Setter Target="b1.Foreground" Value="Black"/>
+                                                <Setter Target="b1.Background" Value="White"/>
+
+                                            </VisualState.Setters>
+                                        </VisualState>
+                                        <VisualState>
+                                            <VisualState.StateTriggers>
+                                                <triggers:IsEqualStateTrigger Value="{Binding (ui:FrameworkElementExtensions.Ancestor).IsExpanded, RelativeSource={RelativeSource Self}, Mode=OneWay}" To="False"/>
+                                            </VisualState.StateTriggers>
+                                            <VisualState.Setters>
+                                                <Setter Target="b1.Padding" Value="9,4,1,6"/>
+                                                <!--<Setter Target="b1.Content" Value="&#xE937;"/>-->
+                                                <Setter Target="b1.Content" Value="False"/>
+                                            </VisualState.Setters>
+                                        </VisualState>
+                                    </VisualStateGroup>
+                                </VisualStateManager.VisualStateGroups>
                             </Button>
                             <TextBlock Text="{TemplateBinding Content}" Padding="{Binding Padding}" Margin="0,6,0,0" FontSize="{Binding FontSize}"/>
-                            <VisualStateManager.VisualStateGroups>
-                                <VisualStateGroup>
-                                    <VisualState>
-                                        <VisualState.StateTriggers>
-                                            <triggers:IsEqualStateTrigger Value="{Binding IsExpanded}" To="True"/>
-                                        </VisualState.StateTriggers>
-                                        <VisualState.Setters>
-                                            <Setter Target="b1.Padding" Value="5,7,5,3"/>
-                                            <Setter Target="b1.Content" Value="&#xE936;"/>
-                                        </VisualState.Setters>
-                                    </VisualState>
-                                    <VisualState>
-                                        <VisualState.StateTriggers>
-                                            <triggers:IsEqualStateTrigger Value="{Binding IsExpanded}" To="False"/>
-                                        </VisualState.StateTriggers>
-                                        <VisualState.Setters>
-                                            <Setter Target="b1.Padding" Value="9,4,1,6"/>
-                                            <Setter Target="b1.Content" Value="&#xE937;"/>
-                                        </VisualState.Setters>
-                                    </VisualState>
-                                </VisualStateGroup>
-                            </VisualStateManager.VisualStateGroups>
                         </StackPanel>
                     </Border>
 
@@ -213,18 +219,18 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="local:DimensionContainerCell" >
-                    <Border Background="{TemplateBinding Background}" ui:FrameworkElementExtensions.AncestorType="local:LeaderPivotControl"
+                    <Border ui:FrameworkElementExtensions.AncestorType="local:LeaderPivotControl"
+                            Background="{TemplateBinding Background}" 
                             BorderThickness="0"
-                            Padding="{Binding (ui:FrameworkElementExtensions.Ancestor).CellPadding}"
-                            DataContext="{Binding (ui:FrameworkElementExtensions.Ancestor).CellPadding}">
+                            Padding="{Binding (ui:FrameworkElementExtensions.Ancestor).CellPadding, RelativeSource={RelativeSource Self}}"
+                            DataContext="{Binding (ui:FrameworkElementExtensions.Ancestor), RelativeSource={RelativeSource Self}}">
 
-                        <ScrollViewer 
+                        <ScrollViewer ui:FrameworkElementExtensions.AncestorType="local:LeaderPivotControl"
                             Visibility="{Binding DisplayDimensionButtons, Converter={StaticResource BoolToVisibilityConverter}}"  
                             VerticalScrollBarVisibility="Auto"
                             HorizontalScrollBarVisibility="Auto"
                             HorizontalAlignment="Left">
-                            <ItemsControl Name="DimensionItems" 
-                                          ItemsSource="{TemplateBinding Dimensions}">
+                            <ItemsControl Name="DimensionItems" ItemsSource="{TemplateBinding Dimensions}">
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
                                         <local:DimensionButton 
@@ -276,7 +282,7 @@
                                         <DataTemplate>
                                             <CheckBox ui:FrameworkElementExtensions.AncestorType="local:LeaderPivotControl"
                                                 Content="{Binding Item.DisplayValue}" 
-                                                IsChecked="{Binding IsSelected}" 
+                                                IsChecked="{Binding IsSelected, Mode=TwoWay}" 
                                                 Command="{Binding (ui:FrameworkElementExtensions.Ancestor).ToggleMeasureEnabledCommand, RelativeSource={RelativeSource Self}}" 
                                                 CommandParameter="{Binding}"
                                                 Style="{Binding (ui:FrameworkElementExtensions.Ancestor).MeasureCheckboxStyle, RelativeSource={RelativeSource Self}}" Padding="2" />
@@ -285,19 +291,20 @@
                                 </ItemsControl>
                                 <CheckBox ui:FrameworkElementExtensions.AncestorType="local:LeaderPivotControl"
                                           Content="Grand Totals" Margin="3,0,0,0"
-                                          IsChecked="{Binding (ui:FrameworkElementExtensions.Ancestor).ViewBuilder.DisplayGrandTotals, RelativeSource={RelativeSource Self}}" 
+                                          IsChecked="{Binding (ui:FrameworkElementExtensions.Ancestor).ViewBuilder.DisplayGrandTotals, RelativeSource={RelativeSource Self}, Mode=TwoWay}" 
                                           Command="{Binding (ui:FrameworkElementExtensions.Ancestor).ReloadDataCommand, RelativeSource={RelativeSource Self}}" Padding="2" 
                                           Visibility="{Binding (ui:FrameworkElementExtensions.Ancestor).DisplayGrandTotalOption, RelativeSource={RelativeSource Self}, Converter={StaticResource BoolToVisibilityConverter}}"
                                           Style="{Binding (ui:FrameworkElementExtensions.Ancestor).MeasureCheckboxStyle, RelativeSource={RelativeSource Self}}"
                                           Grid.Row="2" />
 
-                                <local:DimensionContainerCell BorderThickness="0" Margin="0,3,0,0"
+                                <local:DimensionContainerCell ui:FrameworkElementExtensions.AncestorType="local:LeaderPivotControl"
+                                    BorderThickness="0" Margin="0,3,0,0"
                                     IsRows="True" 
-                                    Dimensions="{Binding ViewBuilder.RowDimensions}" 
+                                    Dimensions="{Binding (ui:FrameworkElementExtensions.Ancestor).ViewBuilder.RowDimensions, RelativeSource={RelativeSource Self}}" 
                                     Grid.Row="3"/>
 
 
-                                <ComboBox Grid.Row="4" x:Name="HiddenDimensionsComboBox" 
+                                <ComboBox Grid.Row="4" x:Name="HiddenDimensionsComboBox" HorizontalAlignment="Stretch"
                                           Style="{TemplateBinding HiddenDimensionsListBoxStyle}"
                                           Padding="6" Margin="0,6,0,6"
                                           Text="Hidden Dimensions" 

@@ -205,7 +205,7 @@ public sealed partial class ControlPanel : UserControl, INotifyPropertyChanged
 
     private void SetResourceDictionary(string themeName, bool add)
     {
-        //Uri uri = new Uri($"ms-appx:///LeaderPivot.XAML.WinUI.Host/Themes/{themeName}.xaml");
+        //Uri uri = new Uri($"ms-appx://LeaderAnalytics.LeaderPivot.XAML.WinUI.Host/Themes/{themeName}.xaml");
         Uri uri = new Uri($"ms-appx:///Themes/{themeName}.xaml");
 
         if (add)

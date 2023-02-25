@@ -10,7 +10,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:leaderPivot="using:LeaderAnalytics.LeaderPivot.XAML.WinUI"
     mc:Ignorable="d">
-
+    <Page>
     <Grid Background="CornflowerBlue">
         <Grid.RowDefinitions>
             <RowDefinition Height="150"/>
@@ -32,4 +32,5 @@
                     IsBusy="{x:Bind VM.IsBusy}"/>
         </Border>
     </Grid>
+    </Page>
 </Window>

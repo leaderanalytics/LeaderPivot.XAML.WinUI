@@ -12,6 +12,8 @@ public partial class CellContainer : ContentControl
 
 public abstract partial class BaseCell : ContentControl, INotifyPropertyChanged
 {
+
+
     public BaseCell() => DefaultStyleKey = typeof(BaseCell);
 
     #region INotifyPropertyChanged implementation
