@@ -99,15 +99,22 @@
                             <Style TargetType="TextBlock" BasedOn="{StaticResource RightTextBlockStyle}"></Style>
                         </Border.Resources>
                         
-                        <TextBlock Text="{TemplateBinding Content}" Padding="{Binding Padding}" FontSize="{Binding FontSize}"/>
+                        <TextBlock Text="{TemplateBinding Content}" Style="{TemplateBinding ContentStyle}" />
                     </Border>
                 </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="ContentStyle">
+            <Setter.Value>
+                <Style TargetType="TextBlock" BasedOn="{StaticResource RightTextBlockStyle}"></Style>
             </Setter.Value>
         </Setter>
     </Style>
 
     <Style TargetType="local:BaseCell" BasedOn="{StaticResource BaseCellStyle}" x:Key="BaseTotalCellStyle">
         <Setter Property="Background" Value="LightGray"/>
+        
+        
     </Style>
 
     <Style TargetType="local:MeasureCell" BasedOn="{StaticResource BaseCellStyle}">
@@ -120,27 +127,37 @@
     </Style>
 
     <Style TargetType="local:MeasureLabelCell"  BasedOn="{StaticResource BaseCellStyle}">
-        <!--<Style.Resources>
-        <Style TargetType="TextBlock" BasedOn="{StaticResource LeftTextBlockStyle}"></Style>
-        </Style.Resources>-->
+        
+        <Setter Property="ContentStyle">
+            <Setter.Value>
+                <Style TargetType="TextBlock" BasedOn="{StaticResource LeftTextBlockStyle}"></Style>
+            </Setter.Value>
+        </Setter>
     </Style>
 
     <Style TargetType="local:MeasureTotalLabelCell"  BasedOn="{StaticResource BaseTotalCellStyle}">
-        <!--<Style.Resources>
-            <Style TargetType="TextBlock" BasedOn="{StaticResource LeftTextBlockStyle}"></Style>
-        </Style.Resources>-->
+        
+        <Setter Property="ContentStyle">
+            <Setter.Value>
+                <Style TargetType="TextBlock" BasedOn="{StaticResource LeftTextBlockStyle}"></Style>
+            </Setter.Value>
+        </Setter>
     </Style>
 
     <Style TargetType="local:TotalHeaderCell"  BasedOn="{StaticResource BaseTotalCellStyle}">
-        <!--<Style.Resources>
-            <Style TargetType="TextBlock" BasedOn="{StaticResource LeftTextBlockStyle}"></Style>
-        </Style.Resources>-->
+        <Setter Property="ContentStyle">
+            <Setter.Value>
+                <Style TargetType="TextBlock" BasedOn="{StaticResource LeftTextBlockStyle}"></Style>
+            </Setter.Value>
+        </Setter>
     </Style>
 
     <Style TargetType="local:GrandTotalHeaderCell"  BasedOn="{StaticResource BaseTotalCellStyle}">
-        <!--<Style.Resources>
-            <Style TargetType="TextBlock" BasedOn="{StaticResource LeftTextBlockStyle}"></Style>
-        </Style.Resources>-->
+        <Setter Property="ContentStyle">
+            <Setter.Value>
+                <Style TargetType="TextBlock" BasedOn="{StaticResource LeftTextBlockStyle}"></Style>
+            </Setter.Value>
+        </Setter>
     </Style>
     
 
@@ -222,7 +239,7 @@
                     <Border ui:FrameworkElementExtensions.AncestorType="local:LeaderPivotControl"
                             Background="{TemplateBinding Background}" 
                             BorderThickness="0"
-                            Padding="{Binding (ui:FrameworkElementExtensions.Ancestor).CellPadding, RelativeSource={RelativeSource Self}}"
+                            Padding="{Binding (ui:FrameworkElementExtensions.Ancestor).CellPadding, RelativeSource={RelativeSource Self}, Converter={StaticResource IntToThicknessConverter}}"
                             DataContext="{Binding (ui:FrameworkElementExtensions.Ancestor), RelativeSource={RelativeSource Self}}">
 
                         <ScrollViewer ui:FrameworkElementExtensions.AncestorType="local:LeaderPivotControl"

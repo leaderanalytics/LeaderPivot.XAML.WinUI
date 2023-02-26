@@ -86,7 +86,7 @@
     
     <!--Control containers-->
 
-    <!--<Style TargetType="leaderpivot:DimensionContainerCell" >
+    <Style TargetType="leaderpivot:DimensionContainerCell" >
         <Setter Property="Foreground" Value="{ThemeResource DimensionContainerCellForegroundBrush}"/>
         <Setter Property="Background" Value="{ThemeResource DimensionContainerCellBackgroundBrush}"/>
     </Style>
@@ -118,5 +118,5 @@
                 </Style>
             </Setter.Value>
         </Setter>
-    </Style>-->
+    </Style>
 </ResourceDictionary>

@@ -12,7 +12,14 @@ public partial class CellContainer : ContentControl
 
 public abstract partial class BaseCell : ContentControl, INotifyPropertyChanged
 {
+    public Style ContentStyle
+    {
+        get { return (Style)GetValue(ContentStyleProperty); }
+        set { SetValue(ContentStyleProperty, value); }
+    }
 
+    public static readonly DependencyProperty ContentStyleProperty =
+        DependencyProperty.Register("ContentStyle", typeof(Style), typeof(BaseCell), new PropertyMetadata(null));
 
     public BaseCell() => DefaultStyleKey = typeof(BaseCell);
 
