@@ -7,8 +7,12 @@
     xmlns:converters="using:CommunityToolkit.WinUI.UI.Converters"
     xmlns:triggers="using:CommunityToolkit.WinUI.UI.Triggers"
     xmlns:Interactivity="using:Microsoft.Xaml.Interactivity" 
-    xmlns:Interactions="using:Microsoft.Xaml.Interactions.Core">
-
+    xmlns:Interactions="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:leaderpivot="using:LeaderAnalytics.LeaderPivot.XAML.WinUI">
+    <!--<ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="Themes/PivotStyles.xaml" />
+    </ResourceDictionary.MergedDictionaries>-->
+    
     <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
     <localConverters:IntToThicknessConverter x:Key="IntToThicknessConverter"/>
     <Style TargetType="ScrollViewer">
@@ -44,7 +48,7 @@
     </Style>
 
     <Style TargetType="local:LeaderPivotControl" >
-        <Setter Property="CellBorderBrush" Value="Black"/>
+        <Setter Property="CellBorderBrush" Value="{ThemeResource CellBorderBrush}"/>
         <Setter Property="CellBorderThickness" Value=".5"/>
         <Setter Property="CellPadding" Value="4"/>
         <Setter Property="Template">
@@ -118,16 +122,23 @@
     </Style>
 
     <Style TargetType="local:MeasureCell" BasedOn="{StaticResource BaseCellStyle}">
+        <Setter Property="Foreground" Value="{ThemeResource ForegroundBrush}"/>
+        <Setter Property="Background" Value="{ThemeResource MeasureBackgroundBrush}"/>
     </Style>
 
     <Style TargetType="local:TotalCell"  BasedOn="{StaticResource BaseTotalCellStyle}">
+        <Setter Property="Foreground" Value="{ThemeResource ForegroundBrush}"/>
+        <Setter Property="Background" Value="{ThemeResource TotalBackgroundBrush}"/>
     </Style>
 
     <Style TargetType="local:GrandTotalCell"  BasedOn="{StaticResource BaseTotalCellStyle}">
+        <Setter Property="Foreground" Value="{ThemeResource ForegroundBrush}"/>
+        <Setter Property="Background" Value="{ThemeResource GrandTotalBackgroundBrush}"/>
     </Style>
 
     <Style TargetType="local:MeasureLabelCell"  BasedOn="{StaticResource BaseCellStyle}">
-        
+        <Setter Property="Foreground" Value="{ThemeResource ForegroundBrush}"/>
+        <Setter Property="Background" Value="{ThemeResource MeasureLabelBackgroundBrush}"/>
         <Setter Property="ContentStyle">
             <Setter.Value>
                 <Style TargetType="TextBlock" BasedOn="{StaticResource LeftTextBlockStyle}"></Style>
@@ -136,7 +147,8 @@
     </Style>
 
     <Style TargetType="local:MeasureTotalLabelCell"  BasedOn="{StaticResource BaseTotalCellStyle}">
-        
+        <Setter Property="Foreground" Value="{ThemeResource ForegroundBrush}"/>
+        <Setter Property="Background" Value="{ThemeResource TotalLabelBackgroundBrush}"/>
         <Setter Property="ContentStyle">
             <Setter.Value>
                 <Style TargetType="TextBlock" BasedOn="{StaticResource LeftTextBlockStyle}"></Style>
@@ -145,6 +157,8 @@
     </Style>
 
     <Style TargetType="local:TotalHeaderCell"  BasedOn="{StaticResource BaseTotalCellStyle}">
+        <Setter Property="Foreground" Value="{ThemeResource ForegroundBrush}"/>
+        <Setter Property="Background" Value="{ThemeResource TotalHeaderBackgroundBrush}"/>
         <Setter Property="ContentStyle">
             <Setter.Value>
                 <Style TargetType="TextBlock" BasedOn="{StaticResource LeftTextBlockStyle}"></Style>
@@ -153,6 +167,8 @@
     </Style>
 
     <Style TargetType="local:GrandTotalHeaderCell"  BasedOn="{StaticResource BaseTotalCellStyle}">
+        <Setter Property="Foreground" Value="{ThemeResource ForegroundBrush}"/>
+        <Setter Property="Background" Value="{ThemeResource GrandTotalHeaderBackgroundBrush}"/>
         <Setter Property="ContentStyle">
             <Setter.Value>
                 <Style TargetType="TextBlock" BasedOn="{StaticResource LeftTextBlockStyle}"></Style>
@@ -162,6 +178,8 @@
     
 
     <Style TargetType="local:GroupHeaderCell" >
+        <Setter Property="Foreground" Value="{ThemeResource ForegroundBrush}"/>
+        <Setter Property="Background" Value="{ThemeResource GroupHeaderBackgroundBrush}"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="local:GroupHeaderCell">
@@ -232,6 +250,8 @@
     </Style>
 
     <Style TargetType="local:DimensionContainerCell">
+        <Setter Property="Foreground" Value="{ThemeResource DimensionContainerCellForegroundBrush}"/>
+        <Setter Property="Background" Value="{ThemeResource DimensionContainerCellBackgroundBrush}"/>
         <Setter Property="Padding" Value="6"/>
         <Setter Property="Template">
             <Setter.Value>
@@ -271,6 +291,32 @@
     </Style>
 
     <Style TargetType="local:MeasureContainerCell">
+        <Setter Property="Foreground" Value="{ThemeResource MeasureContainerCellForegroundBrush}"/>
+        <Setter Property="Background" Value="{ThemeResource MeasureContainerCellBackgroundBrush}"/>
+        <Setter Property="ReloadButtonStyle">
+            <Setter.Value>
+                <Style TargetType="Button">
+                    <Setter Property="Foreground" Value="{ThemeResource ReloadButtonForegroundBrush}"/>
+                    <Setter Property="Background" Value="{ThemeResource ReloadButtonBackgroundBrush}"/>
+                </Style>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="MeasureCheckBoxStyle">
+            <Setter.Value>
+                <Style TargetType="CheckBox">
+                    <Setter Property="Foreground" Value="{ThemeResource MeasureCheckboxForegroundBrush}"/>
+                    <Setter Property="Background" Value="{ThemeResource MeasureCheckboxBackgroundBrush}"/>
+                </Style>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="HiddenDimensionsListBoxStyle">
+            <Setter.Value>
+                <Style TargetType="ComboBox">
+                    <Setter Property="Foreground" Value="{ThemeResource HiddenDimListBoxForegroundBrush}"/>
+                    <Setter Property="Background" Value="{ThemeResource HiddenDimListBoxBackgroundBrush}"/>
+                </Style>
+            </Setter.Value>
+        </Setter>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="local:MeasureContainerCell" >
@@ -388,7 +434,27 @@
         <Setter Property="ButtonStyle">
             <Setter.Value>
                 <Style TargetType="Button">
+                    <Setter Property="Foreground" Value="{ThemeResource DimensionButtonForegroundBrush}"/>
+                    <Setter Property="Background" Value="{ThemeResource DimensionButtonBackgroundBrush}"/>
                     <Setter Property="Padding" Value="6"/>
+                    <Setter Property="Margin" Value="4"/>
+                    <Setter Property="BorderThickness" Value="0"/>
+                </Style>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="ListBoxStyle">
+            <Setter.Value>
+                <Style TargetType="ListBox">
+                    <Setter Property="Foreground" Value="{ThemeResource DimensionButtonListboxForegroundBrush}"/>
+                    <Setter Property="Background" Value="{ThemeResource DimensionButtonListboxBackgroundBrush}"/>
+                </Style>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="ListBoxItemStyle">
+            <Setter.Value>
+                <Style TargetType="ListBoxItem">
+                    <Setter Property="Foreground" Value="{ThemeResource DimensionButtonListboxItemForegroundBrush}"/>
+                    <Setter Property="Background" Value="{ThemeResource DimensionButtonListboxItemBackgroundBrush}"/>
                 </Style>
             </Setter.Value>
         </Setter>

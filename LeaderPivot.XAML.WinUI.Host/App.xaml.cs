@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
@@ -28,6 +29,20 @@ namespace LeaderPivot.XAML.WinUI.Host;
 /// </summary>
 public partial class App : Application
 {
+    private static Window startupWindow;
+
+    // Get the initial window created for this app
+    // On UWP, this is simply Window.Current
+    // On Desktop, multiple Windows may be created, and the StartupWindow may have already
+    // been closed.
+    public static Window StartupWindow
+    {
+        get
+        {
+            return startupWindow;
+        }
+    }
+
     /// <summary>
     /// Initializes the singleton application object.  This is the first line of authored code
     /// executed, and as such is the logical equivalent of main() or WinMain().
@@ -43,9 +58,7 @@ public partial class App : Application
     /// <param name="args">Details about the launch request and process.</param>
     protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
     {
-        m_window = new MainWindow();
-        m_window.Activate();
+        startupWindow = new MainWindow();
+        startupWindow.Activate();
     }
-
-    private Window m_window;
 }

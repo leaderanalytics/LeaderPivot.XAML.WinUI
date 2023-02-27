@@ -57,7 +57,7 @@
 	<Style TargetType="leaderpivot:DimensionButton">
         <Setter Property="ButtonStyle">
             <Setter.Value>
-                <Style TargetType="Button" BasedOn="{StaticResource MaterialDesignRaisedButton}">
+                <Style TargetType="Button">
                     <Setter Property="Foreground" Value="{ThemeResource DimensionButtonForegroundBrush}"/>
                     <Setter Property="Background" Value="{ThemeResource DimensionButtonBackgroundBrush}"/>
                     <Setter Property="Padding" Value="6"/>

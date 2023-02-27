@@ -53,9 +53,7 @@
                             <Interactions:InvokeCommandAction Command="{x:Bind SelectedThemeChangedCommand}" />
                         </Interactions:EventTriggerBehavior>
                     </Interactivity:Interaction.Behaviors>
-                    <ComboBoxItem Content="Primary" IsSelected="True" />
-                    <ComboBoxItem Content="Light" />
-                    <ComboBoxItem Content="Secondary" />
+                    <ComboBoxItem Content="Light" IsSelected="True" />
                     <ComboBoxItem Content="Dark" />
                 </ComboBox>
             </StackPanel>
