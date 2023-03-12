@@ -57,11 +57,11 @@
                     <Border Background="{TemplateBinding Background}" 
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}"
-                            VerticalAlignment="Top" HorizontalAlignment="Left">
+                            VerticalAlignment="Top" HorizontalAlignment="Left" ui:FrameworkElementExtensions.AncestorType="local:LeaderPivotControl" >
 
                         <Border BorderBrush="{TemplateBinding CellBorderBrush}" ui:FrameworkElementExtensions.AncestorType="local:LeaderPivotControl"
                                 BorderThickness="{TemplateBinding CellBorderThickness}"
-                                DataContext="{Binding (ui:FrameworkElementExtensions.Ancestor), RelativeSource={RelativeSource Self}}" >
+                                DataContext="{Binding (ui:FrameworkElementExtensions.Ancestor), RelativeSource={RelativeSource Self}}" x:Name="leaderPivotControl" >
 
                             <ScrollViewer x:Name="ContentScrollViewer" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
                                 <Grid x:Name="PART_Grid" />
@@ -117,8 +117,6 @@
 
     <Style TargetType="local:BaseCell" BasedOn="{StaticResource BaseCellStyle}" x:Key="BaseTotalCellStyle">
         <Setter Property="Background" Value="LightGray"/>
-        
-        
     </Style>
 
     <Style TargetType="local:MeasureCell" BasedOn="{StaticResource BaseCellStyle}">
@@ -303,7 +301,7 @@
         </Setter>
         <Setter Property="MeasureCheckBoxStyle">
             <Setter.Value>
-                <Style TargetType="CheckBox">
+                <Style TargetType="ToggleSwitch">
                     <Setter Property="Foreground" Value="{ThemeResource MeasureCheckboxForegroundBrush}"/>
                     <Setter Property="Background" Value="{ThemeResource MeasureCheckboxBackgroundBrush}"/>
                 </Style>
@@ -343,12 +341,19 @@
                                               Visibility="{Binding (ui:FrameworkElementExtensions.Ancestor).DisplayMeasureSelectors, RelativeSource={RelativeSource Self}, Converter={StaticResource BoolToVisibilityConverter}}">
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
-                                            <CheckBox ui:FrameworkElementExtensions.AncestorType="local:LeaderPivotControl"
-                                                Content="{Binding Item.DisplayValue}" 
-                                                IsChecked="{Binding IsSelected, Mode=TwoWay}" 
-                                                Command="{Binding (ui:FrameworkElementExtensions.Ancestor).ToggleMeasureEnabledCommand, RelativeSource={RelativeSource Self}}" 
-                                                CommandParameter="{Binding}"
-                                                Style="{Binding (ui:FrameworkElementExtensions.Ancestor).MeasureCheckboxStyle, RelativeSource={RelativeSource Self}}" Padding="2" />
+                                            <ToggleSwitch ui:FrameworkElementExtensions.AncestorType="local:LeaderPivotControl"
+                                                OnContent="{Binding Item.DisplayValue}" OffContent="{Binding Item.DisplayValue}" 
+                                                IsOn="{Binding IsSelected, Mode=TwoWay}" 
+                                                Style="{Binding (ui:FrameworkElementExtensions.Ancestor).MeasureCheckboxStyle, ElementName=leaderPivotControl}">
+                                                <Interactivity:Interaction.Behaviors>
+                                                    <Interactions:EventTriggerBehavior EventName="Toggled">
+                                                        <Interactions:InvokeCommandAction 
+                                                            Command="{Binding ElementName=leaderPivotControl, Path=ToggleMeasureEnabledCommand, Mode=TwoWay}"
+                                                            CommandParameter="{Binding}">
+                                                        </Interactions:InvokeCommandAction>
+                                                    </Interactions:EventTriggerBehavior>
+                                                </Interactivity:Interaction.Behaviors>
+                                            </ToggleSwitch>
                                         </DataTemplate>
                                     </ItemsControl.ItemTemplate>
                                 </ItemsControl>
