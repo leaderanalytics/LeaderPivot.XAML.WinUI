@@ -16,3 +16,12 @@ global using CommunityToolkit.Mvvm.Input;
 global using System.Collections;
 global using LeaderAnalytics.LeaderPivot.XAML.WinUI;
 global using System.Reflection;
+
+global using System.IO;
+
+global using System.Runtime.InteropServices.WindowsRuntime;
+global using Windows.Foundation;
+global using Windows.Foundation.Collections;
+global using Microsoft.UI.Xaml.Controls.Primitives;
+global using Microsoft.UI.Xaml.Input;
+global using Microsoft.UI.Xaml.Navigation;

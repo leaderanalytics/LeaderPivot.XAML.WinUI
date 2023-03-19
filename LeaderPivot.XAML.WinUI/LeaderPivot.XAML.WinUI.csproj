@@ -37,8 +37,17 @@
   </PropertyGroup>
   
   <ItemGroup>
-    <None Remove="Themes\PivotStyles.xaml" />
+    <Compile Remove="DropDownButton.cs" />
   </ItemGroup>
+
+	<ItemGroup>
+		<None Remove="Junk.xaml" />
+		<None Remove="Themes\PivotStyles.xaml" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Page Remove="Themes\PivotStyles.xaml" />
+	</ItemGroup>
   
   <ItemGroup>
 	<None Include="..\icon.png" Pack="true" PackagePath="\" />
@@ -55,8 +64,14 @@
   </ItemGroup>
 
 	<ItemGroup>
-	  <Page Update="Themes\PivotStyles.xaml">
+	  <Resource Include="Themes\PivotStyles.xaml">
 	    <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+	  </Resource>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Page Update="Junk.xaml">
+	    <Generator>MSBuild:Compile</Generator>
 	  </Page>
 	</ItemGroup>
 </Project>
