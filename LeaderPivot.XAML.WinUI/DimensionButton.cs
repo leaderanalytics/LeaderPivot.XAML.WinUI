@@ -1,6 +1,6 @@
 ﻿namespace LeaderAnalytics.LeaderPivot.XAML.WinUI;
 
-public partial class DimensionButton : Control
+public partial class DimensionButton : ContentControl
 {
     public ICommand MenuCommand
     {
