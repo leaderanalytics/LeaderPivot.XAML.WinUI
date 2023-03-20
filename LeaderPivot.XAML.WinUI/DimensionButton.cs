@@ -77,6 +77,11 @@ public partial class DimensionButton : Control
     public DimensionButton()
     {
         DefaultStyleKey = typeof(DimensionButton);
-        MenuCommand = new RelayCommand<DimensionAction>(x  => Command?.Execute(new DimensionEventArgs {DimensionID = Dimension.ID, Action = x}));
+        
+        // https://github.com/microsoft/microsoft-ui-xaml/issues/7633
+        MenuCommand = new RelayCommand<object>(x  =>
+        {
+            Command?.Execute(new DimensionEventArgs { DimensionID = Dimension.ID, Action = (DimensionAction)x });
+        });
     }
 }

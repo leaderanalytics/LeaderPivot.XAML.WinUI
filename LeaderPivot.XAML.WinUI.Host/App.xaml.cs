@@ -58,7 +58,15 @@ public partial class App : Application
     /// <param name="args">Details about the launch request and process.</param>
     protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
     {
-        startupWindow = new MainWindow();
-        startupWindow.Activate();
+        try
+        {
+            startupWindow = new MainWindow();
+            startupWindow.Activate();
+        }
+        catch(Exception ex) {
+            
+            string y = ex.ToString();
+            
+        }
     }
 }
