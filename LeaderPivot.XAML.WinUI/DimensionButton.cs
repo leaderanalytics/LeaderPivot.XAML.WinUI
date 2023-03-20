@@ -1,6 +1,6 @@
 ﻿namespace LeaderAnalytics.LeaderPivot.XAML.WinUI;
 
-public partial class DimensionButton : ContentControl
+public partial class DimensionButton : Control
 {
     public ICommand MenuCommand
     {
@@ -50,7 +50,7 @@ public partial class DimensionButton : ContentControl
     }
 
     public static readonly DependencyProperty ButtonStyleProperty =
-        DependencyProperty.Register("ButtonStyle", typeof(Style), typeof(DropDownButton), new PropertyMetadata(null));
+        DependencyProperty.Register("ButtonStyle", typeof(Style), typeof(DimensionButton), new PropertyMetadata(null));
 
 
     public Style ListBoxStyle
@@ -60,7 +60,7 @@ public partial class DimensionButton : ContentControl
     }
 
     public static readonly DependencyProperty ListBoxStyleProperty =
-        DependencyProperty.Register("ListBoxStyle", typeof(Style), typeof(DropDownButton), new PropertyMetadata(null));
+        DependencyProperty.Register("ListBoxStyle", typeof(Style), typeof(DimensionButton), new PropertyMetadata(null));
 
 
 
@@ -71,7 +71,7 @@ public partial class DimensionButton : ContentControl
     }
 
     public static readonly DependencyProperty ListBoxItemStyleProperty =
-      DependencyProperty.Register("ListBoxItemStyle", typeof(Style), typeof(DropDownButton), new PropertyMetadata(null));
+      DependencyProperty.Register("ListBoxItemStyle", typeof(Style), typeof(DimensionButton), new PropertyMetadata(null));
 
 
     public DimensionButton()
