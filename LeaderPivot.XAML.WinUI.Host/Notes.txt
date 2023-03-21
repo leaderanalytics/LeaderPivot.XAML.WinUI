@@ -1,0 +1,1 @@
+﻿https://github.com/microsoft/CsWinRT/blob/master/docs/authoring.md
