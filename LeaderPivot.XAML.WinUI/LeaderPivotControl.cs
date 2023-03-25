@@ -278,14 +278,22 @@ public sealed partial class LeaderPivotControl : Control
     {
         this.DefaultStyleKey = typeof(LeaderPivotControl);
         ReloadDataCommand = new AsyncRelayCommand(() => BuildGrid(null));
-        DimensionEventCommand = new AsyncRelayCommand<DimensionEventArgs>(DimensionEventCommandHandler);
+        DimensionEventCommand = new AsyncRelayCommand<object>(DimensionEventCommandHandler);
         toggleNodeExpansionCommand = new AsyncRelayCommand<string>(x => BuildGrid(x));
-        ToggleMeasureEnabledCommand = new AsyncRelayCommand<Selectable<Measure>>(ToggleMeasureEnabledCommandHandler, (m) => {
+        //ToggleMeasureEnabledCommand = new AsyncRelayCommand<Selectable<Measure>>(ToggleMeasureEnabledCommandHandler, (m) => {
+        ToggleMeasureEnabledCommand = new AsyncRelayCommand<object>(ToggleMeasureEnabledCommandHandler, (o) => {
 
             // The intent of this logic is to require at least one measure to be selected.
             // Therefore, the checkbox should be enabled if any of the following is true:
             // 1.) Checkbox is unchecked - user should always be able to select (check) a measure.
             // 2.) More than one checkbox is checked.
+
+            Selectable<Measure> m = o as Selectable<Measure>;
+
+
+            if (m is null)
+                return false;
+
 
             bool canExecute = !m.IsSelected || ViewBuilder.Measures.Count(x => x.Item.IsEnabled) > 1;
             return canExecute;
@@ -351,7 +359,7 @@ public sealed partial class LeaderPivotControl : Control
                     CellType.MeasureLabel when i == 0 && j == 1 => new DimensionContainerCell { Dimensions = ViewBuilder.ColumnDimensions, IsRows = false },
                     CellType.MeasureLabel => new MeasureLabelCell(),
                     _ => throw new NotImplementedException($"Cell type not recognised: {mCell.CellType}.")
-                };
+                };    
 
                 Style? style = cell switch
                 {
@@ -388,8 +396,11 @@ public sealed partial class LeaderPivotControl : Control
         IsBusy = false;
     }
 
-    public async Task DimensionEventCommandHandler(DimensionEventArgs dimensionEvent)
+    public async Task DimensionEventCommandHandler(object o)
     {
+        // https://github.com/microsoft/microsoft-ui-xaml/issues/7633
+        DimensionEventArgs dimensionEvent = o as DimensionEventArgs;
+
         if (dimensionEvent == null)
             throw new ArgumentNullException(nameof(dimensionEvent));
         if (dimensionEvent.Action == DimensionAction.NoOp)
@@ -421,8 +432,10 @@ public sealed partial class LeaderPivotControl : Control
     }
 
 
-    public async Task ToggleMeasureEnabledCommandHandler(Selectable<Measure> measure)
+    public async Task ToggleMeasureEnabledCommandHandler(object o)
     {
+        Selectable<Measure> measure = o as Selectable<Measure>;
+
         measure.Item.IsEnabled = measure.IsSelected;
         ToggleMeasureEnabledCommand.NotifyCanExecuteChanged();
         await BuildGrid(null);

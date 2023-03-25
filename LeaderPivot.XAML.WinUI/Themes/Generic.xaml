@@ -11,6 +11,7 @@
     xmlns:leaderpivot="using:LeaderAnalytics.LeaderPivot.XAML.WinUI">
     
     <ResourceDictionary.MergedDictionaries>
+        <!--https://github.com/microsoft/microsoft-ui-xaml/issues/3371-->
         <!--<ResourceDictionary Source="ms-appx:///LeaderAnalytics.LeaderPivot.XAML.WinUI/Themes/DimensionButton.xaml" />-->
     </ResourceDictionary.MergedDictionaries>
 
@@ -62,7 +63,7 @@
 
                         <Border BorderBrush="{TemplateBinding CellBorderBrush}" ui:FrameworkElementExtensions.AncestorType="local:LeaderPivotControl"
                                 BorderThickness="{TemplateBinding CellBorderThickness}"
-                                DataContext="{Binding (ui:FrameworkElementExtensions.Ancestor), RelativeSource={RelativeSource Self}}" x:Name="leaderPivotControl" >
+                                 x:Name="leaderPivotControl" >
 
                             <ScrollViewer x:Name="ContentScrollViewer" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
                                 <Grid x:Name="PART_Grid" />
@@ -83,7 +84,7 @@
                     <Border Background="Transparent" Padding="0" ui:FrameworkElementExtensions.AncestorType="local:LeaderPivotControl"
                             BorderBrush="{Binding (ui:FrameworkElementExtensions.Ancestor).CellBorderBrush, RelativeSource={RelativeSource Self}}"
                             BorderThickness="{Binding (ui:FrameworkElementExtensions.Ancestor).CellBorderThickness, RelativeSource={RelativeSource Self}}"
-                            DataContext="{Binding (ui:FrameworkElementExtensions.Ancestor), RelativeSource={RelativeSource Self}}">
+                            >
                         <ContentPresenter/>
                     </Border>
                 </ControlTemplate>
@@ -184,11 +185,11 @@
                     <Border Background="{TemplateBinding Background}" ui:FrameworkElementExtensions.AncestorType="local:LeaderPivotControl"
                             BorderThickness="0"
                             Padding="{Binding (ui:FrameworkElementExtensions.Ancestor).CellPadding, RelativeSource={RelativeSource Self}, Converter={StaticResource IntToThicknessConverter}}"
-                            DataContext="{Binding (ui:FrameworkElementExtensions.Ancestor), RelativeSource={RelativeSource Self}}">
+                            >
                         <StackPanel Orientation="Horizontal">
 
                             <Button ui:FrameworkElementExtensions.AncestorType="local:GroupHeaderCell" x:Name="b1"
-                                    DataContext="{Binding (ui:FrameworkElementExtensions.Ancestor), RelativeSource={RelativeSource Self}}"
+                                    
                                     Command="{Binding ToggleNodeExpansionCommand}" CommandParameter="{Binding NodeID}"
                                     Foreground="{Binding (ui:FrameworkElementExtensions.Ancestor).Foreground, RelativeSource={RelativeSource Self}}"
                                     Visibility="{Binding CanToggleExpansion, Converter={StaticResource BoolToVisibilityConverter}}">
@@ -322,14 +323,13 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="local:DimensionContainerCell" >
-                    <Border ui:FrameworkElementExtensions.AncestorType="local:LeaderPivotControl"
+                    <Border ui:FrameworkElementExtensions.AncestorType="local:LeaderPivotControl" x:Name="layoutRoot"
                             Background="{TemplateBinding Background}" 
                             BorderThickness="0"
-                            Padding="{Binding (ui:FrameworkElementExtensions.Ancestor).CellPadding, RelativeSource={RelativeSource Self}, Converter={StaticResource IntToThicknessConverter}}"
-                            DataContext="{Binding (ui:FrameworkElementExtensions.Ancestor), RelativeSource={RelativeSource Self}}">
+                            Padding="{Binding (ui:FrameworkElementExtensions.Ancestor).CellPadding, RelativeSource={RelativeSource Self}, Converter={StaticResource IntToThicknessConverter}}">
 
                         <ScrollViewer ui:FrameworkElementExtensions.AncestorType="local:LeaderPivotControl"
-                            Visibility="{Binding DisplayDimensionButtons, Converter={StaticResource BoolToVisibilityConverter}}"  
+                            Visibility="{Binding (ui:FrameworkElementExtensions.Ancestor).DisplayDimensionButtons, RelativeSource={RelativeSource Self}, Converter={StaticResource BoolToVisibilityConverter}}"  
                             VerticalScrollBarVisibility="Auto"
                             HorizontalScrollBarVisibility="Auto"
                             HorizontalAlignment="Left">
@@ -338,7 +338,7 @@
                                     <DataTemplate>
                                         <local:DimensionButton 
                                             Dimension="{Binding}" 
-                                            Command="{Binding (ui:FrameworkElementExtensions.Ancestor).DimensionEventCommand, RelativeSource={RelativeSource Self}, Mode=TwoWay}" >
+                                            Command="{Binding (ui:FrameworkElementExtensions.Ancestor).DimensionEventCommand, ElementName=layoutRoot, Mode=TwoWay}" >
                                         </local:DimensionButton>
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
@@ -387,8 +387,7 @@
                 <ControlTemplate TargetType="local:MeasureContainerCell" >
                     <Border Background="{TemplateBinding Background}" ui:FrameworkElementExtensions.AncestorType="local:LeaderPivotControl"
                             BorderThickness="0"
-                            Padding="{Binding (ui:FrameworkElementExtensions.Ancestor).CellPadding}"
-                            DataContext="{Binding (ui:FrameworkElementExtensions.Ancestor)}">
+                            Padding="{Binding (ui:FrameworkElementExtensions.Ancestor).CellPadding, RelativeSource={RelativeSource Self}}">
                         <ScrollViewer x:Name="ContentScrollViewer" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
                             <Grid x:Name="PART_Grid">
                                 <Grid.RowDefinitions>
@@ -402,10 +401,10 @@
                                         Style="{Binding ReloadButtonStyle}" Height="25" Width="80"
                                         Command="{Binding (ui:FrameworkElementExtensions.Ancestor).ReloadDataCommand, RelativeSource={RelativeSource Self}}" 
                                         Visibility="{Binding (ui:FrameworkElementExtensions.Ancestor).DisplayReloadDataButton, RelativeSource={RelativeSource Self}, Converter={StaticResource BoolToVisibilityConverter}}" />
-
-                                <ItemsControl ui:FrameworkElementExtensions.AncestorType="local:LeaderPivotControl"
+                                <!--ItemsSource="{Binding ViewBuilder.Measures}"-->
+                                <ItemsControl ui:FrameworkElementExtensions.AncestorType="local:LeaderPivotControl" x:Name="measureItemsControl"
                                               ItemsSource="{Binding (ui:FrameworkElementExtensions.Ancestor).ViewBuilder.Measures, RelativeSource={RelativeSource Self}}" Grid.Row="1" Margin="3,10,0,0"
-                                              Visibility="{Binding (ui:FrameworkElementExtensions.Ancestor).DisplayMeasureSelectors, RelativeSource={RelativeSource Self}, Converter={StaticResource BoolToVisibilityConverter}}">
+                                              Visibility="{Binding DisplayMeasureSelectors, Converter={StaticResource BoolToVisibilityConverter}}">
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
                                             <ToggleSwitch ui:FrameworkElementExtensions.AncestorType="local:LeaderPivotControl"
@@ -415,7 +414,7 @@
                                                 <Interactivity:Interaction.Behaviors>
                                                     <Interactions:EventTriggerBehavior EventName="Toggled">
                                                         <Interactions:InvokeCommandAction 
-                                                            Command="{Binding ElementName=leaderPivotControl, Path=ToggleMeasureEnabledCommand, Mode=TwoWay}"
+                                                            Command="{Binding (ui:FrameworkElementExtensions.Ancestor).ToggleMeasureEnabledCommand, ElementName=measureItemsControl, Mode=TwoWay}"
                                                             CommandParameter="{Binding}">
                                                         </Interactions:InvokeCommandAction>
                                                     </Interactions:EventTriggerBehavior>
@@ -436,6 +435,7 @@
                                     BorderThickness="0" Margin="0,3,0,0"
                                     IsRows="True" 
                                     Dimensions="{Binding (ui:FrameworkElementExtensions.Ancestor).ViewBuilder.RowDimensions, RelativeSource={RelativeSource Self}}" 
+                                    Command="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Command, Mode=TwoWay}"
                                     Grid.Row="3"/>
 
 

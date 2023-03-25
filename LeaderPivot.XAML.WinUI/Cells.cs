@@ -58,9 +58,25 @@ public partial class DimensionContainerCell : BaseCell
     public static readonly DependencyProperty IsRowsProperty =
         DependencyProperty.Register("IsRows", typeof(bool), typeof(DimensionContainerCell), new PropertyMetadata(false));
 
+
+    public ICommand Command
+    {
+        get { return (ICommand)GetValue(CommandProperty); }
+        set { SetValue(CommandProperty, value); }
+    }
+
+    public static readonly DependencyProperty CommandProperty =
+        DependencyProperty.Register("Command", typeof(ICommand), typeof(DimensionContainerCell), new PropertyMetadata(null));
+
+
+
     public int MaxDimensions { get; set; }
 
-    public DimensionContainerCell() => DefaultStyleKey = typeof(DimensionContainerCell);
+    public DimensionContainerCell()
+    {
+        DefaultStyleKey = typeof(DimensionContainerCell);
+        
+    }
 }
 
 public partial class GroupHeaderCell : BaseCell
@@ -153,6 +169,16 @@ public partial class MeasureContainerCell : BaseCell
 
     public static readonly DependencyProperty HiddenDimensionsListBoxStyleProperty =
         DependencyProperty.Register("HiddenDimensionsListBoxStyle", typeof(Style), typeof(MeasureContainerCell), new PropertyMetadata(null));
+
+    public ICommand Command
+    {
+        get { return (ICommand)GetValue(CommandProperty); }
+        set { SetValue(CommandProperty, value); }
+    }
+
+    public static readonly DependencyProperty CommandProperty =
+        DependencyProperty.Register("Command", typeof(ICommand), typeof(MeasureContainerCell), new PropertyMetadata(null));
+
 
     public MeasureContainerCell() => DefaultStyleKey = typeof(MeasureContainerCell);
 }
