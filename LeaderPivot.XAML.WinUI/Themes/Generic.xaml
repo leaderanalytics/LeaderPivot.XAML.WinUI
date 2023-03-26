@@ -17,6 +17,7 @@
 
     <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
     <localConverters:IntToThicknessConverter x:Key="IntToThicknessConverter"/>
+    <localConverters:DimensionToHiddenAction x:Key="DimensionToHiddenAction"/>
     <Style TargetType="ScrollViewer">
         <Setter Property="HorizontalScrollBarVisibility" Value="Auto"/>
         <Setter Property="VerticalScrollBarVisibility" Value="Auto"/>
@@ -184,24 +185,46 @@
                 <ControlTemplate TargetType="local:GroupHeaderCell">
                     <Border Background="{TemplateBinding Background}" ui:FrameworkElementExtensions.AncestorType="local:LeaderPivotControl"
                             BorderThickness="0"
-                            Padding="{Binding (ui:FrameworkElementExtensions.Ancestor).CellPadding, RelativeSource={RelativeSource Self}, Converter={StaticResource IntToThicknessConverter}}"
-                            >
-                        <StackPanel Orientation="Horizontal">
+                            Padding="{Binding (ui:FrameworkElementExtensions.Ancestor).CellPadding, RelativeSource={RelativeSource Self}, Converter={StaticResource IntToThicknessConverter}}">
 
-                            <Button ui:FrameworkElementExtensions.AncestorType="local:GroupHeaderCell" x:Name="b1"
-                                    
-                                    Command="{Binding ToggleNodeExpansionCommand}" CommandParameter="{Binding NodeID}"
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup>
+                                <VisualState>
+                                    <VisualState.StateTriggers>
+                                        <triggers:IsEqualStateTrigger Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=IsExpanded, Mode=OneWay}"  To="True"/>
+                                    </VisualState.StateTriggers>
+                                    <VisualState.Setters>
+                                        <Setter Target="b1.Padding" Value="5,7,5,3"/>
+                                        <Setter Target="b1.Content" Value="&#xE936;"/>
+                                    </VisualState.Setters>
+                                </VisualState>
+                                <VisualState>
+                                    <VisualState.StateTriggers>
+                                        <triggers:IsEqualStateTrigger Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=IsExpanded, Mode=OneWay}" To="False"/>
+                                    </VisualState.StateTriggers>
+                                    <VisualState.Setters>
+                                        <Setter Target="b1.Padding" Value="9,4,1,6"/>
+                                        <Setter Target="b1.Content" Value="&#xE937;"/>
+                                    </VisualState.Setters>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+
+
+
+                        <StackPanel Orientation="Horizontal">
+                            
+                            <Button ui:FrameworkElementExtensions.AncestorType="local:GroupHeaderCell" x:Name="b1" 
+                                    Command="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=ToggleNodeExpansionCommand}" CommandParameter="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=NodeID}"
                                     Foreground="{Binding (ui:FrameworkElementExtensions.Ancestor).Foreground, RelativeSource={RelativeSource Self}}"
-                                    Visibility="{Binding CanToggleExpansion, Converter={StaticResource BoolToVisibilityConverter}}">
+                                    Visibility="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=CanToggleExpansion, Converter={StaticResource BoolToVisibilityConverter}}">
                                 <Button.Resources>
-                                    <Style TargetType="Border">
-                                        <Setter Property="CornerRadius" Value="45"/>
-                                    </Style>
                                     <Style TargetType="Button">
                                         <Setter Property="BorderThickness" Value="0"/>
                                         <Setter Property="Background" Value="Transparent"/>
+                                        <Setter Property="CornerRadius" Value="45"/>
                                         <Setter Property="Height" Value="25"/>
-                                        <Setter Property="Width" Value="50"/>
+                                        <Setter Property="Width" Value="25"/>
                                         <Setter Property="HorizontalAlignment" Value="Left"/>
                                         <Setter Property="VerticalAlignment" Value="top"/>
                                         <Setter Property="HorizontalContentAlignment" Value="Center"/>
@@ -211,35 +234,9 @@
                                         <Setter Property="Margin" Value="3"/>
                                     </Style>
                                 </Button.Resources>
-                                <VisualStateManager.VisualStateGroups>
-                                    <VisualStateGroup>
-                                        <VisualState>
-                                            <VisualState.StateTriggers>
-                                                <triggers:IsEqualStateTrigger Value="{Binding (ui:FrameworkElementExtensions.Ancestor).IsExpanded, RelativeSource={RelativeSource Self}, Mode=OneWay}"  To="True"/>
-                                            </VisualState.StateTriggers>
-                                            <VisualState.Setters>
-                                                <Setter Target="b1.Padding" Value="5,7,5,3"/>
-                                                <!--<Setter Target="b1.Content" Value="&#xE936;"/>-->
-                                                <Setter Target="b1.Content" Value="True"/>
-                                                <Setter Target="b1.Foreground" Value="Black"/>
-                                                <Setter Target="b1.Background" Value="White"/>
-
-                                            </VisualState.Setters>
-                                        </VisualState>
-                                        <VisualState>
-                                            <VisualState.StateTriggers>
-                                                <triggers:IsEqualStateTrigger Value="{Binding (ui:FrameworkElementExtensions.Ancestor).IsExpanded, RelativeSource={RelativeSource Self}, Mode=OneWay}" To="False"/>
-                                            </VisualState.StateTriggers>
-                                            <VisualState.Setters>
-                                                <Setter Target="b1.Padding" Value="9,4,1,6"/>
-                                                <!--<Setter Target="b1.Content" Value="&#xE937;"/>-->
-                                                <Setter Target="b1.Content" Value="False"/>
-                                            </VisualState.Setters>
-                                        </VisualState>
-                                    </VisualStateGroup>
-                                </VisualStateManager.VisualStateGroups>
+                               
                             </Button>
-                            <TextBlock Text="{TemplateBinding Content}" Padding="{Binding Padding}" Margin="0,6,0,0" FontSize="{Binding FontSize}"/>
+                            <TextBlock Text="{TemplateBinding Content}" Padding="{TemplateBinding Padding}" Margin="0,6,0,0" FontSize="{TemplateBinding FontSize}"/>
                         </StackPanel>
                     </Border>
 
@@ -387,7 +384,7 @@
                 <ControlTemplate TargetType="local:MeasureContainerCell" >
                     <Border Background="{TemplateBinding Background}" ui:FrameworkElementExtensions.AncestorType="local:LeaderPivotControl"
                             BorderThickness="0"
-                            Padding="{Binding (ui:FrameworkElementExtensions.Ancestor).CellPadding, RelativeSource={RelativeSource Self}}">
+                            Padding="{Binding (ui:FrameworkElementExtensions.Ancestor).CellPadding, RelativeSource={RelativeSource Self}, Converter={StaticResource IntToThicknessConverter}}">
                         <ScrollViewer x:Name="ContentScrollViewer" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
                             <Grid x:Name="PART_Grid">
                                 <Grid.RowDefinitions>
@@ -401,20 +398,22 @@
                                         Style="{Binding ReloadButtonStyle}" Height="25" Width="80"
                                         Command="{Binding (ui:FrameworkElementExtensions.Ancestor).ReloadDataCommand, RelativeSource={RelativeSource Self}}" 
                                         Visibility="{Binding (ui:FrameworkElementExtensions.Ancestor).DisplayReloadDataButton, RelativeSource={RelativeSource Self}, Converter={StaticResource BoolToVisibilityConverter}}" />
-                                <!--ItemsSource="{Binding ViewBuilder.Measures}"-->
-                                <ItemsControl ui:FrameworkElementExtensions.AncestorType="local:LeaderPivotControl" x:Name="measureItemsControl"
-                                              ItemsSource="{Binding (ui:FrameworkElementExtensions.Ancestor).ViewBuilder.Measures, RelativeSource={RelativeSource Self}}" Grid.Row="1" Margin="3,10,0,0"
+                                
+                                <ItemsControl x:Name="measureItemsControl"
+                                              ui:FrameworkElementExtensions.AncestorType="local:LeaderPivotControl"
+                                              Grid.Row="1" Margin="3,10,0,0"
+                                              ItemsSource="{Binding (ui:FrameworkElementExtensions.Ancestor).ViewBuilder.Measures, RelativeSource={RelativeSource Self}}" 
                                               Visibility="{Binding DisplayMeasureSelectors, Converter={StaticResource BoolToVisibilityConverter}}">
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
-                                            <ToggleSwitch ui:FrameworkElementExtensions.AncestorType="local:LeaderPivotControl"
+                                            <ToggleSwitch 
                                                 OnContent="{Binding Item.DisplayValue}" OffContent="{Binding Item.DisplayValue}" 
                                                 IsOn="{Binding IsSelected, Mode=TwoWay}" 
-                                                Style="{Binding (ui:FrameworkElementExtensions.Ancestor).MeasureCheckboxStyle, ElementName=leaderPivotControl}">
+                                                Style="{Binding (ui:FrameworkElementExtensions.Ancestor).MeasureCheckboxStyle, ElementName=measureItemsControl}">
                                                 <Interactivity:Interaction.Behaviors>
                                                     <Interactions:EventTriggerBehavior EventName="Toggled">
                                                         <Interactions:InvokeCommandAction 
-                                                            Command="{Binding (ui:FrameworkElementExtensions.Ancestor).ToggleMeasureEnabledCommand, ElementName=measureItemsControl, Mode=TwoWay}"
+                                                            Command="{Binding (ui:FrameworkElementExtensions.Ancestor).ToggleMeasureEnabledCommand, ElementName=measureItemsControl, Mode=OneWay}"
                                                             CommandParameter="{Binding}">
                                                         </Interactions:InvokeCommandAction>
                                                     </Interactions:EventTriggerBehavior>
@@ -423,13 +422,26 @@
                                         </DataTemplate>
                                     </ItemsControl.ItemTemplate>
                                 </ItemsControl>
-                                <CheckBox ui:FrameworkElementExtensions.AncestorType="local:LeaderPivotControl"
-                                          Content="Grand Totals" Margin="3,0,0,0"
-                                          IsChecked="{Binding (ui:FrameworkElementExtensions.Ancestor).ViewBuilder.DisplayGrandTotals, RelativeSource={RelativeSource Self}, Mode=TwoWay}" 
-                                          Command="{Binding (ui:FrameworkElementExtensions.Ancestor).ReloadDataCommand, RelativeSource={RelativeSource Self}}" Padding="2" 
+
+
+                                <ToggleSwitch ui:FrameworkElementExtensions.AncestorType="local:LeaderPivotControl" x:Name="grandTotalsToggle"
+                                          OnContent="Grand Totals"  OffContent="Grand Totals" Margin="3,0,0,0"
+                                          IsOn="{Binding (ui:FrameworkElementExtensions.Ancestor).ViewBuilder.DisplayGrandTotals, RelativeSource={RelativeSource Self}, Mode=TwoWay}" 
+                                          Padding="2" 
                                           Visibility="{Binding (ui:FrameworkElementExtensions.Ancestor).DisplayGrandTotalOption, RelativeSource={RelativeSource Self}, Converter={StaticResource BoolToVisibilityConverter}}"
                                           Style="{Binding (ui:FrameworkElementExtensions.Ancestor).MeasureCheckboxStyle, RelativeSource={RelativeSource Self}}"
-                                          Grid.Row="2" />
+                                          Grid.Row="2">
+                                    <Interactivity:Interaction.Behaviors>
+                                        <Interactions:EventTriggerBehavior EventName="Toggled">
+                                            <Interactions:InvokeCommandAction 
+                                                            Command="{Binding (ui:FrameworkElementExtensions.Ancestor).ReloadDataCommand, ElementName=grandTotalsToggle, Mode=OneWay}"
+                                                            CommandParameter="{Binding}">
+                                            </Interactions:InvokeCommandAction>
+                                        </Interactions:EventTriggerBehavior>
+                                    </Interactivity:Interaction.Behaviors>
+                                </ToggleSwitch>
+
+
 
                                 <local:DimensionContainerCell ui:FrameworkElementExtensions.AncestorType="local:LeaderPivotControl"
                                     BorderThickness="0" Margin="0,3,0,0"
@@ -439,19 +451,22 @@
                                     Grid.Row="3"/>
 
 
-                                <ComboBox Grid.Row="4" x:Name="HiddenDimensionsComboBox" HorizontalAlignment="Stretch"
+                                <ComboBox x:Name="hiddenDimensionsCombo" 
+                                          ui:FrameworkElementExtensions.AncestorType="local:LeaderPivotControl"
+                                          Grid.Row="4" HorizontalAlignment="Stretch"
                                           Style="{TemplateBinding HiddenDimensionsListBoxStyle}"
                                           Padding="6" Margin="0,6,0,6"
                                           Text="Hidden Dimensions" 
-                                          
-                                          IsEditable="True"
+                                          IsEditable="False"
+                                          SelectedValuePath="DisplayValue"
                                           DisplayMemberPath="DisplayValue"
-                                          Visibility="{Binding ViewBuilder.HiddenDimensionsVisibility}"
-                                          ItemsSource="{Binding ViewBuilder.HiddenDimensions}"
-                                          SelectedItem="{x:Null}">
+                                          Visibility="{Binding (ui:FrameworkElementExtensions.Ancestor).ViewBuilder.HiddenDimensionsVisibility, RelativeSource={RelativeSource Self}}"
+                                          ItemsSource="{Binding (ui:FrameworkElementExtensions.Ancestor).ViewBuilder.HiddenDimensions, RelativeSource={RelativeSource Self}}">
 
                                     <Interactions:EventTriggerBehavior EventName="SelectionChanged">
-                                        <Interactions:InvokeCommandAction Command="{Binding DimensionEventCommand}">
+                                        <Interactions:InvokeCommandAction 
+                                            Command="{Binding (ui:FrameworkElementExtensions.Ancestor).DimensionEventCommand, RelativeSource={RelativeSource Self}, Mode=TwoWay, Converter={StaticResource DimensionToHiddenAction}}" 
+                                            CommandParameter="{Binding }">
                                             <!--<Interactions:InvokeCommandAction.CommandParameter>
                                             </Interactions:InvokeCommandAction.CommandParameter>-->
                                         </Interactions:InvokeCommandAction>

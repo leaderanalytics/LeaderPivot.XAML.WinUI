@@ -2,6 +2,8 @@
 
 public partial class DimensionButton : Control
 {
+
+    // MenuCommand is used internally to this control.  Uplevel controns bind to Command.
     public ICommand MenuCommand
     {
         get { return (ICommand)GetValue(MenuCommandProperty); }

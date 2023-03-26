@@ -289,11 +289,9 @@ public sealed partial class LeaderPivotControl : Control
             // 2.) More than one checkbox is checked.
 
             Selectable<Measure> m = o as Selectable<Measure>;
-
-
+            
             if (m is null)
                 return false;
-
 
             bool canExecute = !m.IsSelected || ViewBuilder.Measures.Count(x => x.Item.IsEnabled) > 1;
             return canExecute;
