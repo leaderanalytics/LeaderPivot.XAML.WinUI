@@ -180,6 +180,19 @@ public partial class MeasureContainerCell : BaseCell
         DependencyProperty.Register("Command", typeof(ICommand), typeof(MeasureContainerCell), new PropertyMetadata(null));
 
 
+    public Dimension SelectedHiddenDimension
+    {
+        get { return (Dimension)GetValue(SelectedHiddenDimensionProperty); }
+        set { SetValue(SelectedHiddenDimensionProperty, value); }
+    }
+
+    public static readonly DependencyProperty SelectedHiddenDimensionProperty =
+        DependencyProperty.Register("SelectedHiddenDimension", typeof(Dimension), typeof(MeasureContainerCell), new PropertyMetadata(null,(s,e) => {
+                // https://github.com/microsoft/XamlBehaviors/issues/240
+                // Can't handle combobox selected item command so fire the command when selected item changes
+            ((MeasureContainerCell)s).Command?.Execute(new DimensionEventArgs { DimensionID = ((Dimension)e.NewValue).DisplayValue, Action = DimensionAction.UnHide });
+        }));
+
     public MeasureContainerCell() => DefaultStyleKey = typeof(MeasureContainerCell);
 }
 

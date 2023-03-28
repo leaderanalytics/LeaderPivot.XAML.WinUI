@@ -276,7 +276,10 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="local:DimensionButton">
-                    <DropDownButton Content="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Dimension.DisplayValue}" >
+                    <DropDownButton 
+                        Content="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Dimension.DisplayValue}"
+                        Style="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=ButtonStyle}">
+                        
                         <DropDownButton.Flyout>
                             <MenuFlyout Placement="Bottom" >
                                 <MenuFlyoutItem Text="Sort Ascending" Command="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=MenuCommand}" >
@@ -368,6 +371,8 @@
                 <Style TargetType="ToggleSwitch">
                     <Setter Property="Foreground" Value="{ThemeResource MeasureCheckboxForegroundBrush}"/>
                     <Setter Property="Background" Value="{ThemeResource MeasureCheckboxBackgroundBrush}"/>
+                    <Setter Property="Margin" Value="0,-5,0,-5"/>
+                    <Setter Property="Padding" Value="0,-5,0,-5"/>
                 </Style>
             </Setter.Value>
         </Setter>
@@ -379,14 +384,15 @@
                 </Style>
             </Setter.Value>
         </Setter>
+        
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="local:MeasureContainerCell" >
-                    <Border Background="{TemplateBinding Background}" ui:FrameworkElementExtensions.AncestorType="local:LeaderPivotControl"
+                    <Border Background="{TemplateBinding Background}" ui:FrameworkElementExtensions.AncestorType="local:LeaderPivotControl" x:Name="measureContainerBorder"
                             BorderThickness="0"
-                            Padding="{Binding (ui:FrameworkElementExtensions.Ancestor).CellPadding, RelativeSource={RelativeSource Self}, Converter={StaticResource IntToThicknessConverter}}">
+                            Padding="{Binding (ui:FrameworkElementExtensions.Ancestor).CellPadding, ElementName=measureContainerBorder, Converter={StaticResource IntToThicknessConverter}}">
                         <ScrollViewer x:Name="ContentScrollViewer" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
-                            <Grid x:Name="PART_Grid">
+                            <Grid x:Name="PART_Grid" ui:FrameworkElementExtensions.AncestorType="local:MeasureContainerCell" >
                                 <Grid.RowDefinitions>
                                     <RowDefinition/>
                                     <RowDefinition/>
@@ -395,13 +401,13 @@
                                     <RowDefinition/>
                                 </Grid.RowDefinitions>
                                 <Button Content="Reload Data" ui:FrameworkElementExtensions.AncestorType="local:LeaderPivotControl"
-                                        Style="{Binding ReloadButtonStyle}" Height="25" Width="80"
+                                        Style="{Binding (ui:FrameworkElementExtensions.Ancestor).ReloadButtonStyle, ElementName=PART_Grid}" 
                                         Command="{Binding (ui:FrameworkElementExtensions.Ancestor).ReloadDataCommand, RelativeSource={RelativeSource Self}}" 
                                         Visibility="{Binding (ui:FrameworkElementExtensions.Ancestor).DisplayReloadDataButton, RelativeSource={RelativeSource Self}, Converter={StaticResource BoolToVisibilityConverter}}" />
                                 
                                 <ItemsControl x:Name="measureItemsControl"
                                               ui:FrameworkElementExtensions.AncestorType="local:LeaderPivotControl"
-                                              Grid.Row="1" Margin="3,10,0,0"
+                                              Grid.Row="1" Margin="0,10,0,0"
                                               ItemsSource="{Binding (ui:FrameworkElementExtensions.Ancestor).ViewBuilder.Measures, RelativeSource={RelativeSource Self}}" 
                                               Visibility="{Binding DisplayMeasureSelectors, Converter={StaticResource BoolToVisibilityConverter}}">
                                     <ItemsControl.ItemTemplate>
@@ -409,7 +415,7 @@
                                             <ToggleSwitch 
                                                 OnContent="{Binding Item.DisplayValue}" OffContent="{Binding Item.DisplayValue}" 
                                                 IsOn="{Binding IsSelected, Mode=TwoWay}" 
-                                                Style="{Binding (ui:FrameworkElementExtensions.Ancestor).MeasureCheckboxStyle, ElementName=measureItemsControl}">
+                                                Style="{Binding (ui:FrameworkElementExtensions.Ancestor).MeasureCheckBoxStyle, ElementName=PART_Grid}">
                                                 <Interactivity:Interaction.Behaviors>
                                                     <Interactions:EventTriggerBehavior EventName="Toggled">
                                                         <Interactions:InvokeCommandAction 
@@ -425,11 +431,10 @@
 
 
                                 <ToggleSwitch ui:FrameworkElementExtensions.AncestorType="local:LeaderPivotControl" x:Name="grandTotalsToggle"
-                                          OnContent="Grand Totals"  OffContent="Grand Totals" Margin="3,0,0,0"
+                                          OnContent="Grand Totals"  OffContent="Grand Totals" 
                                           IsOn="{Binding (ui:FrameworkElementExtensions.Ancestor).ViewBuilder.DisplayGrandTotals, RelativeSource={RelativeSource Self}, Mode=TwoWay}" 
-                                          Padding="2" 
                                           Visibility="{Binding (ui:FrameworkElementExtensions.Ancestor).DisplayGrandTotalOption, RelativeSource={RelativeSource Self}, Converter={StaticResource BoolToVisibilityConverter}}"
-                                          Style="{Binding (ui:FrameworkElementExtensions.Ancestor).MeasureCheckboxStyle, RelativeSource={RelativeSource Self}}"
+                                          Style="{Binding (ui:FrameworkElementExtensions.Ancestor).MeasureCheckBoxStyle, ElementName=PART_Grid}"
                                           Grid.Row="2">
                                     <Interactivity:Interaction.Behaviors>
                                         <Interactions:EventTriggerBehavior EventName="Toggled">
@@ -457,20 +462,20 @@
                                           Style="{TemplateBinding HiddenDimensionsListBoxStyle}"
                                           Padding="6" Margin="0,6,0,6"
                                           Text="Hidden Dimensions" 
-                                          IsEditable="False"
+                                          IsEditable="False" 
                                           SelectedValuePath="DisplayValue"
                                           DisplayMemberPath="DisplayValue"
+                                          SelectedItem="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=SelectedHiddenDimension, Mode=TwoWay}" 
                                           Visibility="{Binding (ui:FrameworkElementExtensions.Ancestor).ViewBuilder.HiddenDimensionsVisibility, RelativeSource={RelativeSource Self}}"
                                           ItemsSource="{Binding (ui:FrameworkElementExtensions.Ancestor).ViewBuilder.HiddenDimensions, RelativeSource={RelativeSource Self}}">
-
-                                    <Interactions:EventTriggerBehavior EventName="SelectionChanged">
+                                    
+                                    <!--https://github.com/microsoft/XamlBehaviors/issues/240-->
+                                    <!--<Interactions:EventTriggerBehavior EventName="SelectionChanged">
                                         <Interactions:InvokeCommandAction 
-                                            Command="{Binding (ui:FrameworkElementExtensions.Ancestor).DimensionEventCommand, RelativeSource={RelativeSource Self}, Mode=TwoWay, Converter={StaticResource DimensionToHiddenAction}}" 
-                                            CommandParameter="{Binding }">
-                                            <!--<Interactions:InvokeCommandAction.CommandParameter>
-                                            </Interactions:InvokeCommandAction.CommandParameter>-->
+                                            Command="{Binding (ui:FrameworkElementExtensions.Ancestor).DimensionEventCommand, ElementName=hiddenDimensionsCombo, Mode=TwoWay, Converter={StaticResource DimensionToHiddenAction}}" 
+                                            CommandParameter="{Binding}">
                                         </Interactions:InvokeCommandAction>
-                                    </Interactions:EventTriggerBehavior>
+                                    </Interactions:EventTriggerBehavior>-->
                                 </ComboBox>
                             </Grid>
                         </ScrollViewer>
@@ -502,66 +507,5 @@
             </CheckBox>
         </Border>
     </DataTemplate>
-
-    
-    
-    
-    
-
-
-    <!--<Style TargetType="local:DropDownButton">
-        <Setter Property="ButtonStyle">
-            <Setter.Value>
-                <Style TargetType="Button">
-                    <Setter Property="Padding" Value="6"/>
-
-                </Style>
-            </Setter.Value>
-        </Setter>
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="local:DropDownButton">
-                    <StackPanel 
-                        Orientation="Vertical" >
-
-                        <Interactivity:Interaction.Behaviors>
-                            <Interactions:EventTriggerBehavior EventName="MouseLeave">
-                                <Interactions:InvokeCommandAction Command="{Binding MouseLeaveCommand}">
-                                </Interactions:InvokeCommandAction>
-                            </Interactions:EventTriggerBehavior>
-                        </Interactivity:Interaction.Behaviors>
-
-
-
-                        <Button x:Name="MartyMcButton" Style="{TemplateBinding ButtonStyle}" Content="{TemplateBinding Content}" Command="{Binding ToggleDropDownCommand}"></Button>
-                        <Popup IsOpen="{Binding IsDropDownOpen}" PlacementTarget="{Binding ElementName=MartyMcButton}" Style="{Binding PopupStyle}">
-                            <Border Margin="0,0,8,8" Padding="{Binding PopupPadding}" >
-                                -->
-    <!--<Border.Effect>
-                                    <DropShadowEffect BlurRadius="5" Opacity="0.4"/>
-                                </Border.Effect>-->
-    <!--
-                                <ListBox x:Name="PART_ListBox" ui:FrameworkElementExtensions.AncestorType="local:DropDownButton"
-                                         ItemsSource="{Binding ItemsSource}" 
-                                         SelectedItem="{Binding SelectedItem, Mode=TwoWay}" 
-                                         ItemTemplate="{Binding ItemTemplate}" 
-                                         Style="{TemplateBinding ListBoxStyle}" ItemContainerStyle="{TemplateBinding ListBoxItemStyle}" >
-
-
-                                    <Interactivity:Interaction.Behaviors>
-                                        <Interactions:EventTriggerBehavior EventName="SelectionChanged">
-                                            <Interactions:InvokeCommandAction Command="{Binding MouseLeaveCommand}"/>
-                                            <Interactions:ChangePropertyAction PropertyName="IsDropDownOpen" TargetObject="(ui:FrameworkElementExtensions.Ancestor)" Value="False"/>
-                                        </Interactions:EventTriggerBehavior>
-                                    </Interactivity:Interaction.Behaviors>
-                                </ListBox>
-                            </Border>
-                        </Popup>
-                    </StackPanel>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
-    </Style>-->
-
 
 </ResourceDictionary>

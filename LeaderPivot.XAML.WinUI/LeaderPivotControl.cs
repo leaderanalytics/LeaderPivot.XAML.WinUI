@@ -353,7 +353,7 @@ public sealed partial class LeaderPivotControl : Control
                     CellType.TotalHeader => new TotalHeaderCell(),
                     CellType.GrandTotalHeader => new GrandTotalHeaderCell(),
                     CellType.MeasureTotalLabel => new MeasureTotalLabelCell(),
-                    CellType.MeasureLabel when i == 0 && j == 0 => new MeasureContainerCell(),
+                    CellType.MeasureLabel when i == 0 && j == 0 => new MeasureContainerCell() {Command = DimensionEventCommand },
                     CellType.MeasureLabel when i == 0 && j == 1 => new DimensionContainerCell { Dimensions = ViewBuilder.ColumnDimensions, IsRows = false },
                     CellType.MeasureLabel => new MeasureLabelCell(),
                     _ => throw new NotImplementedException($"Cell type not recognised: {mCell.CellType}.")
