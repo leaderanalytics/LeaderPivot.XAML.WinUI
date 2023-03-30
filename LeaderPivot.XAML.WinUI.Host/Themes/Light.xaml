@@ -35,7 +35,7 @@
     <SolidColorBrush x:Key="ReloadButtonBackgroundBrush" Color="LightGray"/>
 
     <SolidColorBrush x:Key="MeasureCheckboxForegroundBrush" Color="Black"/>
-    <SolidColorBrush x:Key="MeasureCheckboxBackgroundBrush" Color="#AAD6FA"/>
+    <SolidColorBrush x:Key="MeasureCheckboxBackgroundBrush" Color="White"/>
 
     <SolidColorBrush x:Key="HiddenDimListBoxForegroundBrush" Color="Black"/>
     <SolidColorBrush x:Key="HiddenDimListBoxBackgroundBrush" Color="LightGray"/>
