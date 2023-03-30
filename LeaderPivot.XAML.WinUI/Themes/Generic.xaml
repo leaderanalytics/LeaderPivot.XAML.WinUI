@@ -248,12 +248,13 @@
     <Style TargetType="local:DimensionButton">
         <Setter Property="ButtonStyle">
             <Setter.Value>
-                <Style TargetType="Button">
+                <Style TargetType="DropDownButton">
                     <Setter Property="Foreground" Value="{ThemeResource DimensionButtonForegroundBrush}"/>
                     <Setter Property="Background" Value="{ThemeResource DimensionButtonBackgroundBrush}"/>
                     <Setter Property="Padding" Value="6"/>
                     <Setter Property="Margin" Value="4"/>
-                    <Setter Property="BorderThickness" Value="0"/>
+                    <Setter Property="BorderBrush" Value="Gray"/>
+                    <Setter Property="BorderThickness" Value=".5"/>
                 </Style>
             </Setter.Value>
         </Setter>
@@ -279,7 +280,6 @@
                     <DropDownButton 
                         Content="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Dimension.DisplayValue}"
                         Style="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=ButtonStyle}">
-                        
                         <DropDownButton.Flyout>
                             <MenuFlyout Placement="Bottom" >
                                 <MenuFlyoutItem Text="Sort Ascending" Command="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=MenuCommand}" >
@@ -325,29 +325,35 @@
                 <ControlTemplate TargetType="local:DimensionContainerCell" >
                     <Border ui:FrameworkElementExtensions.AncestorType="local:LeaderPivotControl" x:Name="layoutRoot"
                             Background="{TemplateBinding Background}" 
-                            BorderThickness="0"
+                            BorderThickness="0" 
                             Padding="{Binding (ui:FrameworkElementExtensions.Ancestor).CellPadding, RelativeSource={RelativeSource Self}, Converter={StaticResource IntToThicknessConverter}}">
 
-                        <ScrollViewer ui:FrameworkElementExtensions.AncestorType="local:LeaderPivotControl"
+                        <ScrollViewer ui:FrameworkElementExtensions.AncestorType="local:LeaderPivotControl" 
                             Visibility="{Binding (ui:FrameworkElementExtensions.Ancestor).DisplayDimensionButtons, RelativeSource={RelativeSource Self}, Converter={StaticResource BoolToVisibilityConverter}}"  
                             VerticalScrollBarVisibility="Auto"
                             HorizontalScrollBarVisibility="Auto"
-                            HorizontalAlignment="Left">
-                            <ItemsControl Name="DimensionItems" ItemsSource="{TemplateBinding Dimensions}">
-                                <ItemsControl.ItemTemplate>
+                            HorizontalAlignment="Left" >
+                            <ListView 
+                                x:Name="DimensionItems" 
+                                ItemsSource="{TemplateBinding Dimensions}" 
+                                CanDragItems="True" 
+                                CanReorderItems="True" 
+                                AllowDrop="True" 
+                                SelectionMode="Single">
+                                <ListView.ItemTemplate>
                                     <DataTemplate>
                                         <local:DimensionButton 
                                             Dimension="{Binding}" 
                                             Command="{Binding (ui:FrameworkElementExtensions.Ancestor).DimensionEventCommand, ElementName=layoutRoot, Mode=TwoWay}" >
                                         </local:DimensionButton>
                                     </DataTemplate>
-                                </ItemsControl.ItemTemplate>
+                                </ListView.ItemTemplate>
                                 <ItemsControl.ItemsPanel>
                                     <ItemsPanelTemplate>
-                                        <StackPanel Orientation="Horizontal" ></StackPanel>
+                                        <StackPanel Orientation="Horizontal" AllowDrop="True"  Spacing="-20" ></StackPanel>
                                     </ItemsPanelTemplate>
                                 </ItemsControl.ItemsPanel>
-                            </ItemsControl>
+                            </ListView>
                         </ScrollViewer>
                     </Border>
                 </ControlTemplate>
