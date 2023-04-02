@@ -25,7 +25,6 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.2.230313.1" />
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.756" />
-	<PackageReference Include="LeaderAnalytics.LeaderPivot" Version="1.0.16-beta.2" />
 	<PackageReference Include="LeaderAnalytics.LeaderPivot.TestData" Version="1.0.10-beta.2" />
 	<PackageReference Include="Microsoft.Extensions.Logging.Console" Version="7.0.0" />
 	<PackageReference Include="CommunityToolkit.Mvvm" Version="8.1.0" />

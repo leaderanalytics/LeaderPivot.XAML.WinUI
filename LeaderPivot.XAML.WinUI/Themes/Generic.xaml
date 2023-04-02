@@ -9,27 +9,16 @@
     xmlns:Interactivity="using:Microsoft.Xaml.Interactivity" 
     xmlns:Interactions="using:Microsoft.Xaml.Interactions.Core"
     xmlns:leaderpivot="using:LeaderAnalytics.LeaderPivot.XAML.WinUI">
-    
-    <ResourceDictionary.MergedDictionaries>
-        <!--https://github.com/microsoft/microsoft-ui-xaml/issues/3371-->
-        <!--<ResourceDictionary Source="ms-appx:///LeaderAnalytics.LeaderPivot.XAML.WinUI/Themes/DimensionButton.xaml" />-->
-    </ResourceDictionary.MergedDictionaries>
 
     <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
     <localConverters:IntToThicknessConverter x:Key="IntToThicknessConverter"/>
     <localConverters:DimensionToHiddenAction x:Key="DimensionToHiddenAction"/>
+    <localConverters:NegateConverter x:Key="NegateConverter"/>
+    
     <Style TargetType="ScrollViewer">
         <Setter Property="HorizontalScrollBarVisibility" Value="Auto"/>
         <Setter Property="VerticalScrollBarVisibility" Value="Auto"/>
     </Style>
-
-    <!--<Style TargetType="local:DropDownButton" x:Key="DropDownButtonStyle">
-        <Setter Property="VerticalContentAlignment" Value="Stretch"/>
-        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-        <Setter Property="VerticalAlignment" Value="Center"/>
-        <Setter Property="Padding" Value="4"/>
-        <Setter Property="Margin" Value="0,0,6,0" />
-    </Style>-->
 
     <Style TargetType="Button" x:Key="ReloadButtonStyle">
         <Setter Property="Margin" Value="0" />
@@ -274,6 +263,7 @@
                 </Style>
             </Setter.Value>
         </Setter>
+        <Setter Property="CanDrag" Value="True"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="local:DimensionButton">
@@ -300,7 +290,9 @@
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
 
-                                <MenuFlyoutItem Text="Hide" Command="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=MenuCommand}" >
+                                <MenuFlyoutItem Text="Hide" 
+                                                Command="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=MenuCommand}" 
+                                                IsEnabled="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=CanHide, Mode=OneWay}" >
                                     <MenuFlyoutItem.CommandParameter>
                                         <local:DimensionAction>Hide</local:DimensionAction>
                                     </MenuFlyoutItem.CommandParameter>
@@ -333,8 +325,8 @@
                             VerticalScrollBarVisibility="Auto"
                             HorizontalScrollBarVisibility="Auto"
                             HorizontalAlignment="Left" >
-                            <ListView 
-                                x:Name="DimensionItems" 
+                            <ListView ui:FrameworkElementExtensions.AncestorType="local:DimensionContainerCell" 
+                                x:Name="DimensionItems"
                                 ItemsSource="{TemplateBinding Dimensions}" 
                                 CanDragItems="True" 
                                 CanReorderItems="True" 
@@ -344,15 +336,35 @@
                                     <DataTemplate>
                                         <local:DimensionButton 
                                             Dimension="{Binding}" 
-                                            Command="{Binding (ui:FrameworkElementExtensions.Ancestor).DimensionEventCommand, ElementName=layoutRoot, Mode=TwoWay}" >
+                                            Command="{Binding (ui:FrameworkElementExtensions.Ancestor).DimensionEventCommand, ElementName=layoutRoot, Mode=TwoWay}"
+                                            CanHide="{Binding (ui:FrameworkElementExtensions.Ancestor).CanHide, ElementName=DimensionItems, Mode=OneWay}">
                                         </local:DimensionButton>
                                     </DataTemplate>
                                 </ListView.ItemTemplate>
-                                <ItemsControl.ItemsPanel>
+                                <ListView.ItemsPanel>
                                     <ItemsPanelTemplate>
                                         <StackPanel Orientation="Horizontal" AllowDrop="True"  Spacing="-20" ></StackPanel>
                                     </ItemsPanelTemplate>
-                                </ItemsControl.ItemsPanel>
+                                </ListView.ItemsPanel>
+                                <Interactivity:Interaction.Behaviors>
+                                    <Interactions:EventTriggerBehavior EventName="DragItemsStarting">
+                                        <Interactions:InvokeCommandAction 
+                                                            Command="{Binding (ui:FrameworkElementExtensions.Ancestor).DragItemsStartingCommand, ElementName=layoutRoot}">
+                                        </Interactions:InvokeCommandAction>
+                                    </Interactions:EventTriggerBehavior>
+
+                                    <Interactions:EventTriggerBehavior EventName="DragOver">
+                                        <Interactions:InvokeCommandAction 
+                                                            Command="{Binding (ui:FrameworkElementExtensions.Ancestor).DragOverCommand, ElementName=layoutRoot}">
+                                        </Interactions:InvokeCommandAction>
+                                    </Interactions:EventTriggerBehavior>
+
+                                    <Interactions:EventTriggerBehavior EventName="Drop">
+                                        <Interactions:InvokeCommandAction 
+                                                            Command="{Binding (ui:FrameworkElementExtensions.Ancestor).DropCommand, ElementName=layoutRoot}">
+                                        </Interactions:InvokeCommandAction>
+                                    </Interactions:EventTriggerBehavior>
+                                </Interactivity:Interaction.Behaviors>
                             </ListView>
                         </ScrollViewer>
                     </Border>
@@ -414,14 +426,17 @@
                                 <ItemsControl x:Name="measureItemsControl"
                                               ui:FrameworkElementExtensions.AncestorType="local:LeaderPivotControl"
                                               Grid.Row="1" Margin="0,10,0,0"
-                                              ItemsSource="{Binding (ui:FrameworkElementExtensions.Ancestor).ViewBuilder.Measures, RelativeSource={RelativeSource Self}}" 
+                                              ItemsSource="{Binding RelativeSource={RelativeSource TemplatedParent},Path=Measures}" 
                                               Visibility="{Binding DisplayMeasureSelectors, Converter={StaticResource BoolToVisibilityConverter}}">
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
+                                            
                                             <ToggleSwitch 
+                                                IsEnabled="{Binding Item.CanDisable}"
                                                 OnContent="{Binding Item.DisplayValue}" OffContent="{Binding Item.DisplayValue}" 
                                                 IsOn="{Binding IsSelected, Mode=TwoWay}" 
                                                 Style="{Binding (ui:FrameworkElementExtensions.Ancestor).MeasureCheckBoxStyle, ElementName=PART_Grid}">
+                                                
                                                 <Interactivity:Interaction.Behaviors>
                                                     <Interactions:EventTriggerBehavior EventName="Toggled">
                                                         <Interactions:InvokeCommandAction 
@@ -429,6 +444,8 @@
                                                             CommandParameter="{Binding}">
                                                         </Interactions:InvokeCommandAction>
                                                     </Interactions:EventTriggerBehavior>
+
+                                                    
                                                 </Interactivity:Interaction.Behaviors>
                                             </ToggleSwitch>
                                         </DataTemplate>

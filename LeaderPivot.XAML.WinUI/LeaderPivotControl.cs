@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using Windows.ApplicationModel.DataTransfer;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -267,6 +268,47 @@ public sealed partial class LeaderPivotControl : Control
     public static readonly DependencyProperty ToggleMeasureEnabledCommandProperty =
         DependencyProperty.Register("ToggleMeasureEnabledCommand", typeof(IRelayCommand), typeof(LeaderPivotControl), new PropertyMetadata(null));
 
+
+    public ICommand DragItemsStartingCommand
+    {
+        get { return (ICommand)GetValue(DragItemsStartingCommandProperty); }
+        set { SetValue(DragItemsStartingCommandProperty, value); }
+    }
+
+    public static readonly DependencyProperty DragItemsStartingCommandProperty =
+        DependencyProperty.Register("DragItemsStartingCommand", typeof(ICommand), typeof(LeaderPivotControl), new PropertyMetadata(null));
+
+
+    public ICommand DragOverCommand
+    {
+        get { return (ICommand)GetValue(DragOverCommandProperty); }
+        set { SetValue(DragOverCommandProperty, value); }
+    }
+
+    public static readonly DependencyProperty DragOverCommandProperty =
+        DependencyProperty.Register("DragOverCommand", typeof(ICommand), typeof(LeaderPivotControl), new PropertyMetadata(null));
+
+
+    public ICommand DragEnterCommand
+    {
+        get { return (ICommand)GetValue(DragEnterCommandProperty); }
+        set { SetValue(DragEnterCommandProperty, value); }
+    }
+
+    public static readonly DependencyProperty DragEnterCommandProperty =
+        DependencyProperty.Register("DragEnterCommand", typeof(ICommand), typeof(LeaderPivotControl), new PropertyMetadata(null));
+
+
+    public ICommand DropCommand
+    {
+        get { return (ICommand)GetValue(DropCommandProperty); }
+        set { SetValue(DropCommandProperty, value); }
+    }
+
+    public static readonly DependencyProperty DropCommandProperty =
+        DependencyProperty.Register("DropCommand", typeof(ICommand), typeof(LeaderPivotControl), new PropertyMetadata(null));
+
+
     #endregion
 
     private byte[,]? table;
@@ -280,7 +322,10 @@ public sealed partial class LeaderPivotControl : Control
         ReloadDataCommand = new AsyncRelayCommand(() => BuildGrid(null));
         DimensionEventCommand = new AsyncRelayCommand<object>(DimensionEventCommandHandler);
         toggleNodeExpansionCommand = new AsyncRelayCommand<string>(x => BuildGrid(x));
-        //ToggleMeasureEnabledCommand = new AsyncRelayCommand<Selectable<Measure>>(ToggleMeasureEnabledCommandHandler, (m) => {
+        DragItemsStartingCommand = new RelayCommand<DragItemsStartingEventArgs>(DragItemsStartingCommandHandler);
+        DragOverCommand = new RelayCommand<DragEventArgs>(DragOverCommandHandler);
+        DragEnterCommand = new RelayCommand<DragEventArgs>(DragEnterCommandHandler);
+        DropCommand = new RelayCommand<DragEventArgs>(DropCommandHandler);
         ToggleMeasureEnabledCommand = new AsyncRelayCommand<object>(ToggleMeasureEnabledCommandHandler, (o) => {
 
             // The intent of this logic is to require at least one measure to be selected.
@@ -353,7 +398,7 @@ public sealed partial class LeaderPivotControl : Control
                     CellType.TotalHeader => new TotalHeaderCell(),
                     CellType.GrandTotalHeader => new GrandTotalHeaderCell(),
                     CellType.MeasureTotalLabel => new MeasureTotalLabelCell(),
-                    CellType.MeasureLabel when i == 0 && j == 0 => new MeasureContainerCell() {Command = DimensionEventCommand },
+                    CellType.MeasureLabel when i == 0 && j == 0 => new MeasureContainerCell() { Measures = ViewBuilder.Measures, Command = DimensionEventCommand },
                     CellType.MeasureLabel when i == 0 && j == 1 => new DimensionContainerCell { Dimensions = ViewBuilder.ColumnDimensions, IsRows = false },
                     CellType.MeasureLabel => new MeasureLabelCell(),
                     _ => throw new NotImplementedException($"Cell type not recognised: {mCell.CellType}.")
@@ -430,12 +475,113 @@ public sealed partial class LeaderPivotControl : Control
     }
 
 
-    public async Task ToggleMeasureEnabledCommandHandler(object o)
+    private async Task ToggleMeasureEnabledCommandHandler(object o)
     {
         Selectable<Measure> measure = o as Selectable<Measure>;
 
         measure.Item.IsEnabled = measure.IsSelected;
         ToggleMeasureEnabledCommand.NotifyCanExecuteChanged();
+        await BuildGrid(null);
+    }
+
+
+    private void DragItemsStartingCommandHandler(DragItemsStartingEventArgs e)
+    {
+        e.Data.RequestedOperation = DataPackageOperation.Move;
+        Dimension sourceItem = e.Items[0] as Dimension;
+        IList<Dimension> dimensions = sourceItem.IsRow ? ViewBuilder.RowDimensions : ViewBuilder.ColumnDimensions;
+        e.Data.Properties.Add("Dimension", sourceItem);
+        
+
+        // If source dimensions has exactly one dimension, count dimensions on cross axis.
+        // If cross axis has exactly one dimension allow the drag and swap axis for each 
+        // dimension on drop. 
+        // Otherwise do not allow the drag if source dimensions has only one dimension.
+
+        if (dimensions.Count == 1)
+        {
+            IList<Dimension> crossAxisDimensions = sourceItem.IsRow ? ViewBuilder.ColumnDimensions : ViewBuilder.RowDimensions;
+
+            if (crossAxisDimensions.Count > 1)
+                e.Cancel = true;
+        }
+    }
+
+    private void DragOverCommandHandler(DragEventArgs e)
+    {
+        e.AcceptedOperation = DataPackageOperation.Move;
+    }
+
+    private void DragEnterCommandHandler(DragEventArgs e)
+    {
+        e.DragUIOverride.IsGlyphVisible = false;
+        
+    }
+
+    private async void DropCommandHandler(DragEventArgs e)
+    {
+        // https://github.com/dotnet/maui/issues/13770
+        ListView dropTarget = e.OriginalSource as ListView;
+        Dimension sourceDimension = e.Data.Properties["Dimension"] as Dimension;
+        DragOperationDeferral def = e.GetDeferral();
+        Windows.Foundation.Point pos = e.GetPosition(dropTarget.ItemsPanelRoot);
+        int index = 0;
+        
+        // Get a reference to the first item in the ListView
+        ListViewItem sampleItem = (ListViewItem)dropTarget.ContainerFromIndex(0);
+
+        // Adjust itemHeight for margins
+        double itemWidth = sampleItem.ActualWidth + sampleItem.Margin.Left + sampleItem.Margin.Right;
+
+        // Find index based on dividing number of items by width of each item
+        index = Math.Min(dropTarget.Items.Count - 1, (int)(pos.X / itemWidth));
+
+        // Find the item being dropped on top of.
+        ListViewItem targetItem = (ListViewItem)dropTarget.ContainerFromIndex(index);
+
+        // If the drop position is more than half-way down the item being dropped on
+        //      top of, increment the insertion index so the dropped item is inserted
+        //      below instead of above the item being dropped on top of.
+        Windows.Foundation.Point positionInItem = e.GetPosition(targetItem);
+        
+        if (positionInItem.X > itemWidth / 2)
+            index++;
+
+        // Don't go out of bounds
+        index = Math.Min(dropTarget.Items.Count - 1, index);
+        
+        IList<Dimension> sourceDimensions = sourceDimension.IsRow ? ViewBuilder.RowDimensions : ViewBuilder.ColumnDimensions;
+        IList<Dimension> crossAxisDimensins = sourceDimension.IsRow ? ViewBuilder.ColumnDimensions : ViewBuilder.RowDimensions;
+        Dimension targetDimension = targetItem.Content as Dimension;
+        
+        
+        
+        if (sourceDimension.IsRow != targetDimension.IsRow)
+        {
+            // we are dragging across axis
+
+            // if each axis has only one dimension, swap the remaining dimension
+            if (crossAxisDimensins.Count == 1 && sourceDimensions.Count == 1)
+            {
+                Dimension otherDimension = crossAxisDimensins.First();
+                crossAxisDimensins.Remove(otherDimension);
+                sourceDimensions.Add(otherDimension);
+                otherDimension.IsRow = !otherDimension.IsRow;
+            }
+            
+            sourceDimensions.Remove(sourceDimension);
+            crossAxisDimensins.Add(sourceDimension);
+            sourceDimension.IsRow = !sourceDimension.IsRow;
+            sourceDimensions = crossAxisDimensins;
+        }
+        
+        sourceDimension.Sequence = index;
+        
+        foreach (Dimension d in sourceDimensions.Where(x => x != sourceDimension && x.Sequence >= sourceDimension.Sequence))
+            d.Sequence++;
+
+        e.AcceptedOperation = DataPackageOperation.Move;
+        def.Complete();
         await BuildGrid(null);
     }
 }

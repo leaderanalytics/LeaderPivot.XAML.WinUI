@@ -76,6 +76,16 @@ public partial class DimensionButton : Control
       DependencyProperty.Register("ListBoxItemStyle", typeof(Style), typeof(DimensionButton), new PropertyMetadata(null));
 
 
+    public bool CanHide
+    {
+        get { return (bool)GetValue(CanHideProperty); }
+        set { SetValue(CanHideProperty, value); }
+    }
+
+    public static readonly DependencyProperty CanHideProperty =
+        DependencyProperty.Register("CanHide", typeof(bool), typeof(DimensionButton), new PropertyMetadata(true));
+
+
     public DimensionButton()
     {
         DefaultStyleKey = typeof(DimensionButton);

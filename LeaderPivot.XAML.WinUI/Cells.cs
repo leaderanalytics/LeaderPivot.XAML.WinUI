@@ -1,4 +1,5 @@
-﻿using System.Windows.Input;
+﻿using CommunityToolkit.WinUI.UI;
+using System.Windows.Input;
 
 namespace LeaderAnalytics.LeaderPivot.XAML.WinUI;
 
@@ -47,7 +48,8 @@ public partial class DimensionContainerCell : BaseCell
     }
 
     public static readonly DependencyProperty DimensionsProperty =
-        DependencyProperty.Register("Dimensions", typeof(IList<Dimension>), typeof(DimensionContainerCell), new PropertyMetadata(null));
+        DependencyProperty.Register("Dimensions", typeof(IList<Dimension>), typeof(DimensionContainerCell), new PropertyMetadata(null,
+            (s, e) => ((DimensionContainerCell)s).RaisePropertyChanged(nameof(DimensionContainerCell.CanHide))));
 
     public bool IsRows
     {
@@ -70,12 +72,15 @@ public partial class DimensionContainerCell : BaseCell
 
 
 
+    public bool CanHide => (Dimensions?.Count ?? 0) > 1;
+
+
     public int MaxDimensions { get; set; }
+
 
     public DimensionContainerCell()
     {
         DefaultStyleKey = typeof(DimensionContainerCell);
-        
     }
 }
 
@@ -142,6 +147,18 @@ public partial  class MeasureCell : BaseCell
 
 public partial class MeasureContainerCell : BaseCell
 {
+
+
+    public IList<Selectable<Measure>> Measures
+    {
+        get { return (IList<Selectable<Measure>>)GetValue(MeasuresProperty); }
+        set { SetValue(MeasuresProperty, value); }
+    }
+
+    public static readonly DependencyProperty MeasuresProperty =
+        DependencyProperty.Register("Measures", typeof(IList<Selectable<Measure>>), typeof(MeasureContainerCell), new PropertyMetadata(null));
+
+
     public Style ReloadButtonStyle
     {
         get { return (Style)GetValue(ReloadButtonStyleProperty); }
@@ -192,6 +209,7 @@ public partial class MeasureContainerCell : BaseCell
                 // Can't handle combobox selected item command so fire the command when selected item changes
             ((MeasureContainerCell)s).Command?.Execute(new DimensionEventArgs { DimensionID = ((Dimension)e.NewValue).DisplayValue, Action = DimensionAction.UnHide });
         }));
+
 
     public MeasureContainerCell() => DefaultStyleKey = typeof(MeasureContainerCell);
 }
