@@ -427,25 +427,22 @@
                                               ui:FrameworkElementExtensions.AncestorType="local:LeaderPivotControl"
                                               Grid.Row="1" Margin="0,10,0,0"
                                               ItemsSource="{Binding RelativeSource={RelativeSource TemplatedParent},Path=Measures}" 
-                                              Visibility="{Binding DisplayMeasureSelectors, Converter={StaticResource BoolToVisibilityConverter}}">
+                                              Visibility="{Binding (ui:FrameworkElementExtensions.Ancestor).DisplayMeasureSelectors, ElementName=measureContainerBorder, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}">
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
                                             
                                             <ToggleSwitch 
-                                                IsEnabled="{Binding Item.CanDisable}"
-                                                OnContent="{Binding Item.DisplayValue}" OffContent="{Binding Item.DisplayValue}" 
-                                                IsOn="{Binding IsSelected, Mode=TwoWay}" 
+                                                IsEnabled="{Binding CanDisable, Mode=TwoWay}"
+                                                OnContent="{Binding DisplayValue}" OffContent="{Binding DisplayValue}" 
+                                                IsOn="{Binding IsEnabled, Mode=TwoWay}" 
                                                 Style="{Binding (ui:FrameworkElementExtensions.Ancestor).MeasureCheckBoxStyle, ElementName=PART_Grid}">
                                                 
                                                 <Interactivity:Interaction.Behaviors>
                                                     <Interactions:EventTriggerBehavior EventName="Toggled">
                                                         <Interactions:InvokeCommandAction 
-                                                            Command="{Binding (ui:FrameworkElementExtensions.Ancestor).ToggleMeasureEnabledCommand, ElementName=measureItemsControl, Mode=OneWay}"
-                                                            CommandParameter="{Binding}">
+                                                            Command="{Binding (ui:FrameworkElementExtensions.Ancestor).ToggleMeasureEnabledCommand, ElementName=measureItemsControl, Mode=OneWay}">
                                                         </Interactions:InvokeCommandAction>
                                                     </Interactions:EventTriggerBehavior>
-
-                                                    
                                                 </Interactivity:Interaction.Behaviors>
                                             </ToggleSwitch>
                                         </DataTemplate>

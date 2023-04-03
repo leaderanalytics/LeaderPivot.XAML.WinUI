@@ -149,14 +149,14 @@ public partial class MeasureContainerCell : BaseCell
 {
 
 
-    public IList<Selectable<Measure>> Measures
+    public IList<Measure> Measures
     {
-        get { return (IList<Selectable<Measure>>)GetValue(MeasuresProperty); }
+        get { return (IList<Measure>)GetValue(MeasuresProperty); }
         set { SetValue(MeasuresProperty, value); }
     }
 
     public static readonly DependencyProperty MeasuresProperty =
-        DependencyProperty.Register("Measures", typeof(IList<Selectable<Measure>>), typeof(MeasureContainerCell), new PropertyMetadata(null));
+        DependencyProperty.Register("Measures", typeof(IList<Measure>), typeof(MeasureContainerCell), new PropertyMetadata(null));
 
 
     public Style ReloadButtonStyle

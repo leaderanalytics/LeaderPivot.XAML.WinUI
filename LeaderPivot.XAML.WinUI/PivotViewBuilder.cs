@@ -18,7 +18,7 @@ public partial class PivotViewBuilder<T> : PivotViewBuilder
         DimensionsT = dimensions;
         MeasuresT = measures;
         Dimensions = DimensionsT.ToList<Dimension>();
-        Measures = MeasuresT.OrderBy(x => x.Sequence).Select(x => new Selectable<Measure>(x, x.IsEnabled)).ToList();
+        Measures = MeasuresT.OrderBy(x => x.Sequence).Cast<Measure>().ToList();
         DisplayGrandTotals = displayGrandTotals;
         LoadData = loadData;
         NodeBuilder<T> nodeBuilder = new NodeBuilder<T>();
@@ -59,7 +59,7 @@ public abstract partial class PivotViewBuilder : ObservableObject
     private IList<Dimension> _HiddenDimensions;
 
     [ObservableProperty]
-    private IList<Selectable<Measure>> _Measures;
+    private IList<Measure> _Measures;
 
     [ObservableProperty]
     private LeaderAnalytics.LeaderPivot.Matrix _Matrix;

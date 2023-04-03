@@ -326,21 +326,7 @@ public sealed partial class LeaderPivotControl : Control
         DragOverCommand = new RelayCommand<DragEventArgs>(DragOverCommandHandler);
         DragEnterCommand = new RelayCommand<DragEventArgs>(DragEnterCommandHandler);
         DropCommand = new RelayCommand<DragEventArgs>(DropCommandHandler);
-        ToggleMeasureEnabledCommand = new AsyncRelayCommand<object>(ToggleMeasureEnabledCommandHandler, (o) => {
-
-            // The intent of this logic is to require at least one measure to be selected.
-            // Therefore, the checkbox should be enabled if any of the following is true:
-            // 1.) Checkbox is unchecked - user should always be able to select (check) a measure.
-            // 2.) More than one checkbox is checked.
-
-            Selectable<Measure> m = o as Selectable<Measure>;
-            
-            if (m is null)
-                return false;
-
-            bool canExecute = !m.IsSelected || ViewBuilder.Measures.Count(x => x.Item.IsEnabled) > 1;
-            return canExecute;
-        });
+        ToggleMeasureEnabledCommand = new AsyncRelayCommand(async () => await BuildGrid(null));
 
         Loaded += OnLoaded;
     }
@@ -475,14 +461,7 @@ public sealed partial class LeaderPivotControl : Control
     }
 
 
-    private async Task ToggleMeasureEnabledCommandHandler(object o)
-    {
-        Selectable<Measure> measure = o as Selectable<Measure>;
-
-        measure.Item.IsEnabled = measure.IsSelected;
-        ToggleMeasureEnabledCommand.NotifyCanExecuteChanged();
-        await BuildGrid(null);
-    }
+    
 
 
     private void DragItemsStartingCommandHandler(DragItemsStartingEventArgs e)
