@@ -86,6 +86,18 @@ public partial class DimensionButton : Control
         DependencyProperty.Register("CanHide", typeof(bool), typeof(DimensionButton), new PropertyMetadata(true));
 
 
+    public DimensionAction SelectedAction
+    {
+        get { return (DimensionAction)GetValue(SelectedActionProperty); }
+        set { SetValue(SelectedActionProperty, value); }
+    }
+
+    public static readonly DependencyProperty SelectedActionProperty =
+        DependencyProperty.Register("SelectedAction", typeof(DimensionAction), typeof(DimensionButton), new PropertyMetadata(DimensionAction.NoOp));
+
+
+
+
     public DimensionButton()
     {
         DefaultStyleKey = typeof(DimensionButton);
@@ -93,7 +105,8 @@ public partial class DimensionButton : Control
         // https://github.com/microsoft/microsoft-ui-xaml/issues/7633
         MenuCommand = new RelayCommand<object>(x  =>
         {
-            Command?.Execute(new DimensionEventArgs { DimensionID = Dimension.ID, Action = (DimensionAction)x });
+            SelectedAction = (DimensionAction)x;
+            Command?.Execute(new DimensionEventArgs { DimensionID = Dimension.ID, Action = SelectedAction }); 
         });
     }
 }

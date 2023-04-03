@@ -39,4 +39,10 @@
 
     <SolidColorBrush x:Key="HiddenDimListBoxForegroundBrush" Color="Black"/>
     <SolidColorBrush x:Key="HiddenDimListBoxBackgroundBrush" Color="LightGray"/>
+
+    <SolidColorBrush x:Key="ControlPanelForegroundBrush" Color="#5e5e5e"/>
+    <SolidColorBrush x:Key="ControlPanelBackgroundBrush" Color="Cornsilk"/>
+
+    <SolidColorBrush x:Key="PrimaryContainerForegroundBrush" Color="#5e5e5e"/>
+    <SolidColorBrush x:Key="PrimaryContainerBackgroundBrush" Color="WhiteSmoke"/>
 </ResourceDictionary>

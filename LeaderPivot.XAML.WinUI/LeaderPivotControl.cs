@@ -106,7 +106,7 @@ public sealed partial class LeaderPivotControl : Control
     }
 
     public static readonly DependencyProperty IsBusyProperty =
-        DependencyProperty.Register("IsBusy", typeof(bool), typeof(LeaderPivotControl), new PropertyMetadata(null));
+        DependencyProperty.Register("IsBusy", typeof(bool), typeof(LeaderPivotControl), new PropertyMetadata(false));
 
 
     public Style MeasureCellStyle

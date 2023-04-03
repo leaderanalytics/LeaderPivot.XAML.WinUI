@@ -60,6 +60,8 @@ public partial class App : Application
     {
         try
         {
+            LoadThemeDictionary("Dark");
+            LoadThemeDictionary("Light");
             startupWindow = new MainWindow();
             startupWindow.Activate();
         }
@@ -68,5 +70,15 @@ public partial class App : Application
             string y = ex.ToString();
             
         }
+    }
+
+
+    private void LoadThemeDictionary(string themeName)
+    {
+        // Must specify full path if including in a class library i.e. Uno default library project:
+        // Uri uri = new Uri($"ms-appx://LeaderAnalytics.LeaderPivot.XAML.WinUI.Host/Themes/{themeName}.xaml");
+
+        Uri uri = new Uri($"ms-appx:///Themes/{themeName}.xaml");
+        Application.Current.Resources.ThemeDictionaries.Add(themeName, new ResourceDictionary() { Source = uri });
     }
 }

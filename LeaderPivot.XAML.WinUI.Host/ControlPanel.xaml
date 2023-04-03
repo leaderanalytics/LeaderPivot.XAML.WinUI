@@ -11,12 +11,12 @@
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="400">
-    <UserControl.Resources>
-        <local:NegateVisibilityConverter x:Key="NegateVisibilityConverter" />
-    </UserControl.Resources>
-    <Grid ui:FrameworkElementExtensions.AncestorType="local:ControlPanel"
-          
-         VerticalAlignment="Top" Background="Cornsilk" >
+    
+    <Grid 
+        ui:FrameworkElementExtensions.AncestorType="local:ControlPanel"
+        VerticalAlignment="Top" 
+        HorizontalAlignment="Stretch"
+        Background="{ThemeResource ControlPanelBackgroundBrush}">
         <Grid.RowDefinitions>
             <RowDefinition/>
             <RowDefinition/>
@@ -30,17 +30,23 @@
             <Style TargetType="CheckBox" >
                 <Setter Property="Margin" Value="0,0,20,0"/>
                 <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="Foreground" Value="{ThemeResource ControlPanelForegroundBrush}"/>
             </Style>
             <Style TargetType="StackPanel">
                 <Setter Property="Margin" Value="0,10,0,0"/>
                 <Setter Property="HorizontalAlignment" Value="Center"/>
                 <Setter Property="Orientation" Value="Horizontal"/>
             </Style>
-
+            <Style TargetType="TextBlock" >
+                <Setter Property="Foreground" Value="{ThemeResource ControlPanelForegroundBrush}"/>
+            </Style>
+            <Style TargetType="ComboBoxItem" >
+                <Setter Property="Foreground" Value="{ThemeResource ControlPanelForegroundBrush}"/>
+            </Style>
         </Grid.Resources>
         <TextBlock Text="Sales Data" Grid.RowSpan="2" FontSize="30" Margin="20"></TextBlock>
-        <StackPanel Grid.Column="1" Visibility="{x:Bind PanelVisibility, Mode=OneWay}">
-            <CheckBox IsChecked="{x:Bind DisplayGrandTotalOption, Mode=TwoWay}" Content="Grand Totals Option"/>
+        <StackPanel Grid.Column="1"  >
+            <CheckBox IsChecked="{x:Bind DisplayGrandTotalOption, Mode=TwoWay}" Content="Grand Totals Option" />
             <CheckBox IsChecked="{x:Bind DisplayDimensionButtons, Mode=TwoWay}" Content="Dimension Buttons"/>
             <CheckBox IsChecked="{x:Bind DisplayMeasureSelectors, Mode=TwoWay}" Content="Measure Selectors"/>
             <CheckBox IsChecked="{x:Bind DisplayReloadDataButton, Mode=TwoWay}" Content="Reload Data Button"/>
@@ -58,7 +64,7 @@
                 </ComboBox>
             </StackPanel>
         </StackPanel>
-        <StackPanel Grid.Column="1" Grid.Row="2" Visibility="{x:Bind PanelVisibility, Mode=OneWay}" >
+        <StackPanel Grid.Column="1" Grid.Row="2" >
             <StackPanel Orientation="Horizontal" Margin="0">
                 <TextBlock Text="{x:Bind FontSizeString, Mode=OneWay}" VerticalAlignment="Center" Margin="0,0,6,0"/>
                 <Slider Value="{x:Bind PivotControlFontSize, Mode=TwoWay}" Minimum="6" Maximum="20" Width="200" VerticalAlignment="Center"/>
@@ -68,25 +74,5 @@
                 <Slider Value="{x:Bind CellPadding, Mode=TwoWay}" Minimum="0" Maximum="10" Width="200" VerticalAlignment="Center"/>
             </StackPanel>
         </StackPanel>
-        <Button 
-            Grid.RowSpan="2" Grid.Column="2" 
-            VerticalAlignment="Center" HorizontalAlignment="Center" 
-            Margin="20" Padding="6" 
-            Command="{x:Bind TogglePanelVisibilityCommand}">
-            
-            
-            <Button.Content>
-                <StackPanel Margin="0">
-                    <TextBlock Visibility="{x:Bind PanelVisibility, Mode=OneWay}">
-                        <Run FontFamily="Segoe MDL2 Assets" Text="&#xEB11;" />
-                        <Run Text="Controls" />
-                    </TextBlock>
-                    <TextBlock Visibility="{x:Bind PanelVisibility, Converter={StaticResource NegateVisibilityConverter}, Mode=OneWay}">
-                        <Run FontFamily="Segoe MDL2 Assets" Text="&#xEB0F;" />
-                        <Run Text="Controls" />
-                    </TextBlock>
-                </StackPanel>
-            </Button.Content>
-        </Button>
     </Grid>
 </UserControl>

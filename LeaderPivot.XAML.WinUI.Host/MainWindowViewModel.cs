@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using LeaderAnalytics.LeaderPivot.XAML.WinUI;
 using CommunityToolkit.Mvvm.ComponentModel;
+using Microsoft.UI.Xaml;
 
 namespace LeaderPivot.XAML.WinUI.Host;
 
@@ -17,8 +18,13 @@ public partial class MainWindowViewModel : ObservableObject
     [ObservableProperty]
     private PivotViewBuilder<SalesData> _ViewBuilder;
 
-    [ObservableProperty]
+    
     private bool _IsBusy;
+    public bool IsBusy
+    {
+        get => _IsBusy;
+        set => SetProperty(ref _IsBusy, value);
+    }
    
 
     private SalesDataService SalesDataService;
@@ -26,7 +32,6 @@ public partial class MainWindowViewModel : ObservableObject
 
     public MainWindowViewModel()
     {
-        IsBusy = true;
         SalesDataService = new SalesDataService();
         BuildMatrix();
     }
@@ -51,4 +56,6 @@ public partial class MainWindowViewModel : ObservableObject
         List<SalesData> salesData = SalesDataService.GetSalesData();
         return salesData;
     }
+
+    public Visibility ShowBusy(bool isBusy) => isBusy ? Visibility.Visible : Visibility.Collapsed;
 }

@@ -138,22 +138,14 @@ public sealed partial class ControlPanel : UserControl, INotifyPropertyChanged
     public Windows.UI.Color PrimaryColor
     {
         get => _PrimaryColor;
-        set
-        {
-            SetProp(ref _PrimaryColor, value);
-            ColorsChanged();
-        }
+        set => SetProp(ref _PrimaryColor, value);
     }
 
     private Windows.UI.Color _SecondaryColor;
     public Windows.UI.Color SecondaryColor
     {
         get => _SecondaryColor;
-        set
-        {
-            SetProp(ref _SecondaryColor, value);
-            ColorsChanged();
-        }
+        set => SetProp(ref _SecondaryColor, value);
     }
 
     private bool _IsColorPickerPopupOpen;
@@ -182,18 +174,12 @@ public sealed partial class ControlPanel : UserControl, INotifyPropertyChanged
         ShowColorPickerPopupCommand = new RelayCommand(() => IsColorPickerPopupOpen = true);
         HideColorPickerPopupCommand = new RelayCommand(() => IsColorPickerPopupOpen = false);
         SelectedThemeChangedCommand = new RelayCommand<SelectionChangedEventArgs>((x) => SelectedThemeChangedCommandHandler(x));
-        LoadThemeDictionary("Dark");
-        LoadThemeDictionary("Light");
+        
     }
 
     public static void UseDarkThemeChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
     {
         ControlPanel panel = sender as ControlPanel;
-    }
-
-    public void ColorsChanged()
-    {
-        
     }
 
     private void SelectedThemeChangedCommandHandler(SelectionChangedEventArgs e)
@@ -202,19 +188,6 @@ public sealed partial class ControlPanel : UserControl, INotifyPropertyChanged
         string themeName = ((ComboBoxItem)e.AddedItems[0]).Content.ToString();
         ((FrameworkElement)App.StartupWindow.Content).RequestedTheme = Enum.Parse<ElementTheme>(themeName);
     }
-
-    private void LoadThemeDictionary(string themeName)
-    {
-        // Must specify full path if including in a class library i.e. Uno default library project:
-        // Uri uri = new Uri($"ms-appx://LeaderAnalytics.LeaderPivot.XAML.WinUI.Host/Themes/{themeName}.xaml");
-    
-        Uri uri = new Uri($"ms-appx:///Themes/{themeName}.xaml");
-        Application.Current.Resources.ThemeDictionaries.Add(themeName, new ResourceDictionary() { Source = uri });
-    }
-
-
-    
-
 
     #region INotifyPropertyChanged implementation
     public event PropertyChangedEventHandler? PropertyChanged;

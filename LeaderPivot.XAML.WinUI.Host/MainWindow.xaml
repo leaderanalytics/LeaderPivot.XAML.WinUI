@@ -9,18 +9,29 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:leaderPivot="using:LeaderAnalytics.LeaderPivot.XAML.WinUI"
+    xmlns:localConverters="using:LeaderPivot.XAML.WinUI.Host.Converters"
     mc:Ignorable="d">
-    <Grid>
+    
+    <Grid Background="{ThemeResource PrimaryContainerBackgroundBrush}">
+        <Grid.Resources>
+            <localConverters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+        </Grid.Resources>
         <Grid.RowDefinitions>
-            <RowDefinition Height="150"/>
-            <RowDefinition />
+            <RowDefinition MaxHeight="150"/>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="20" />
         </Grid.RowDefinitions>
-
-        <local:ControlPanel x:Name="controlPanel"/>
-
+        <Expander HorizontalAlignment="Stretch" Padding="0" HorizontalContentAlignment="Stretch" VerticalAlignment="Top">
+            <Expander.HeaderTemplate>
+                <DataTemplate>
+                    <TextBlock Text="Pivot Grid Settings" Foreground="{ThemeResource PrimaryContainerForegroundBrush}"/>
+                </DataTemplate>
+            </Expander.HeaderTemplate>
+            <local:ControlPanel x:Name="controlPanel"/>
+        </Expander>
         <Border Grid.Row="1">
 
-            <leaderPivot:LeaderPivotControl BorderThickness="6" BorderBrush="Silver" Margin="20"
+            <leaderPivot:LeaderPivotControl BorderThickness="1" BorderBrush="Silver" Margin="20" x:Name="lpc"
                     DisplayGrandTotalOption="{x:Bind controlPanel.DisplayGrandTotalOption, Mode=TwoWay}"
                     DisplayDimensionButtons="{x:Bind controlPanel.DisplayDimensionButtons, Mode=TwoWay}"
                     DisplayMeasureSelectors="{x:Bind controlPanel.DisplayMeasureSelectors, Mode=TwoWay}"
@@ -28,7 +39,11 @@
                     FontSize="{x:Bind controlPanel.PivotControlFontSize, Mode=TwoWay}"
                     CellPadding="{x:Bind controlPanel.CellPadding, Mode=TwoWay}"
                     ViewBuilder="{x:Bind VM.ViewBuilder}"
-                    IsBusy="{x:Bind VM.IsBusy}"/>
+                    IsBusy="{x:Bind VM.IsBusy, Mode=TwoWay}"/>
         </Border>
+
+
+        <TextBlock Text="This should be visible when the control is busy but it is not." Visibility="{x:Bind VM.ShowBusy(lpc.IsBusy), Mode=OneWay}" Grid.Row="2"/>
+
     </Grid>
 </Window>

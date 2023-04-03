@@ -14,7 +14,8 @@
     <localConverters:IntToThicknessConverter x:Key="IntToThicknessConverter"/>
     <localConverters:DimensionToHiddenAction x:Key="DimensionToHiddenAction"/>
     <localConverters:NegateConverter x:Key="NegateConverter"/>
-    
+    <localConverters:ActionToFontWeightConverter x:Key="ActionToFontWeightConverter"/>
+
     <Style TargetType="ScrollViewer">
         <Setter Property="HorizontalScrollBarVisibility" Value="Auto"/>
         <Setter Property="VerticalScrollBarVisibility" Value="Auto"/>
@@ -271,22 +272,29 @@
                         Content="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Dimension.DisplayValue}"
                         Style="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=ButtonStyle}">
                         <DropDownButton.Flyout>
-                            <MenuFlyout Placement="Bottom" >
-                                <MenuFlyoutItem Text="Sort Ascending" Command="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=MenuCommand}" >
+                            <MenuFlyout Placement="Bottom">
+                                
+                                <!--Setting FontWeight to bold is an attempt to show whiech item is selected.  It does not work and there is no way I know to show which item is selected. -->
+                                
+                                <MenuFlyoutItem Text="Sort Ascending"
+                                                FontWeight="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=SelectedAction, Mode=OneTime, Converter={StaticResource ActionToFontWeightConverter}, ConverterParameter=SortAscending}"  
+                                                Command="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=MenuCommand}"  >
                                     <MenuFlyoutItem.CommandParameter>
                                         <local:DimensionAction>SortAscending</local:DimensionAction>
                                     </MenuFlyoutItem.CommandParameter>
                                     <MenuFlyoutItem.Icon>
-                                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE725;" FontWeight="Bold"/>
+                                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xEB11;" FontWeight="Bold"/>
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
 
-                                <MenuFlyoutItem Text="Sort Descending" Command="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=MenuCommand}" >
+                                <MenuFlyoutItem Text="Sort Descending" 
+                                                FontWeight="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=SelectedAction, Mode=OneTime, Converter={StaticResource ActionToFontWeightConverter}, ConverterParameter=SortDescending}"  
+                                                Command="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=MenuCommand}" >
                                     <MenuFlyoutItem.CommandParameter>
                                         <local:DimensionAction>SortDescending</local:DimensionAction>
                                     </MenuFlyoutItem.CommandParameter>
                                     <MenuFlyoutItem.Icon>
-                                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE8CA;"/>
+                                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xEB0F;"/>
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
 
@@ -297,7 +305,7 @@
                                         <local:DimensionAction>Hide</local:DimensionAction>
                                     </MenuFlyoutItem.CommandParameter>
                                     <MenuFlyoutItem.Icon>
-                                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE8C2;"/>
+                                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xECE4;"/>
                                     </MenuFlyoutItem.Icon>
                                 </MenuFlyoutItem>
                             </MenuFlyout>
@@ -505,27 +513,6 @@
         </Setter>
     </Style>
 
-    <DataTemplate x:Key="DimensionButtonItemTemplate">
-        <Border Margin="2,3,2,3">
-            <CheckBox HorizontalAlignment="Left" VerticalAlignment="Center" ui:FrameworkElementExtensions.AncestorType="local:DimensionButton"
-                          Command="{Binding (ui:FrameworkElementExtensions.Ancestor).CheckboxCheckedCommand}"
-                          CommandParameter="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Content}"
-                          Content="{Binding (ui:FrameworkElementExtensions.Ancestor).Content, Converter={StaticResource DimensionActionDescriptionConverter}}">
-
-                <!--<CheckBox.IsChecked>
-                    <MultiBinding Converter="{StaticResource DimensionEventCheckedConverter}" Mode="OneWay" >
-                        <Binding RelativeSource="{RelativeSource AncestorType=local:DimensionButton}" Path="Dimension" Mode="OneWay" />
-                        <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="Content" Mode="OneWay"  />
-                    </MultiBinding>
-                </CheckBox.IsChecked>
-                <CheckBox.IsEnabled>
-                    <MultiBinding Converter="{StaticResource DimensionEventEnabledConverter}" Mode="OneWay">
-                        <Binding RelativeSource="{RelativeSource AncestorType=ListBoxItem}" Path="Content" />
-                        <Binding RelativeSource="{RelativeSource AncestorType=local:DimensionContainerCell}" Path="." />
-                    </MultiBinding>
-                </CheckBox.IsEnabled>-->
-            </CheckBox>
-        </Border>
-    </DataTemplate>
+    
 
 </ResourceDictionary>
