@@ -26,7 +26,7 @@ Pivot grid control for WinUI.
 
 * Create [Dimensions](https://github.com/leaderanalytics/LeaderPivot/blob/main/LeaderPivot/Dimension.cs) and [Measures](https://github.com/leaderanalytics/LeaderPivot/blob/main/LeaderPivot/Measure.cs).    Dimensions are used to group data.  Measures are used to create the values shown in each cell of the pivot table.  Examples are provided in the [TestData](https://github.com/leaderanalytics/LeaderPivot.TestData/blob/main/LeaderPivot.TestData/SalesData.cs) project.
 
-* Add a [LeaderPivot control](https://github.com/leaderanalytics/LeaderPivot.XAML.WPF/blob/main/LeaderPivot.XAML.WPF.Host/MainWindow.xaml) to your page.  
+* Add a [LeaderPivot control](https://github.com/leaderanalytics/LeaderPivot.XAML.WinUI/blob/main/LeaderPivot.XAML.WinUI.Host/MainWindow.xaml) to your page.  
 
 This control is based on [LeaderPivot](https://github.com/leaderanalytics/LeaderPivot).
 
