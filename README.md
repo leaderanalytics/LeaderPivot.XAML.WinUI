@@ -24,7 +24,7 @@ Pivot grid control for WinUI
 
 * [Add a LeaderPivot control to your page](https://github.com/leaderanalytics/LeaderPivot.XAML.WinUI/blob/main/LeaderPivot.XAML.WinUI.Host/MainWindow.xaml).  
 
-This control is based on [LeaderPivot](https://github.com/leaderanalytics/LeaderPivot).[Test data can be found here](https://github.com/leaderanalytics/LeaderPivot.TestData).
+This control is based on [LeaderPivot](https://github.com/leaderanalytics/LeaderPivot).  [Test data can be found here](https://github.com/leaderanalytics/LeaderPivot.TestData).
 
 A nuget package for LeaderPivot.XAML.WinUI is not available because it is not [reasonably supported](https://learn.microsoft.com/en-us/windows/uwp/winrt-components/creating-windows-runtime-components-in-csharp-and-visual-basic#declaring-types-in-windows-runtime-components).
 
