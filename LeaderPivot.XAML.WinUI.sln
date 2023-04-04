@@ -5,7 +5,12 @@ VisualStudioVersion = 17.4.33213.308
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LeaderPivot.XAML.WinUI", "LeaderPivot.XAML.WinUI\LeaderPivot.XAML.WinUI.csproj", "{2FFAEB23-8AB8-47B1-93DA-73EA091D5ABC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LeaderPivot.XAML.WinUI.Host", "LeaderPivot.XAML.WinUI.Host\LeaderPivot.XAML.WinUI.Host.csproj", "{2759D382-0C89-49C0-A356-C943D09F7366}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LeaderPivot.XAML.WinUI.Host", "LeaderPivot.XAML.WinUI.Host\LeaderPivot.XAML.WinUI.Host.csproj", "{2759D382-0C89-49C0-A356-C943D09F7366}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E69BE2BE-86E6-43A9-9333-8DFA62A9D048}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

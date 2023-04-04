@@ -1,7 +1,7 @@
 <!-- Copyright (c) Microsoft Corporation and Contributors. -->
 <!-- Licensed under the MIT License. -->
 
-<Window
+<Window 
     x:Class="LeaderPivot.XAML.WinUI.Host.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -24,7 +24,7 @@
         <Expander HorizontalAlignment="Stretch" Padding="0" HorizontalContentAlignment="Stretch" VerticalAlignment="Top">
             <Expander.HeaderTemplate>
                 <DataTemplate>
-                    <TextBlock Text="Pivot Grid Settings" Foreground="{ThemeResource PrimaryContainerForegroundBrush}"/>
+                    <TextBlock Text="Pivot Grid Settings" Foreground="{ThemeResource PrimaryContainerForegroundBrush}" HorizontalAlignment="Right"/>
                 </DataTemplate>
             </Expander.HeaderTemplate>
             <local:ControlPanel x:Name="controlPanel"/>
@@ -42,8 +42,8 @@
                     IsBusy="{x:Bind VM.IsBusy, Mode=TwoWay}"/>
         </Border>
 
-
-        <TextBlock Text="This should be visible when the control is busy but it is not." Visibility="{x:Bind VM.ShowBusy(lpc.IsBusy), Mode=OneWay}" Grid.Row="2"/>
+        <ProgressRing Visibility="{x:Bind VM.ShowBusy(lpc.IsBusy), Mode=OneWay}"  />
+        <!--<TextBlock Text="This should be visible when the control is busy but it is not." Visibility="{x:Bind VM.ShowBusy(lpc.IsBusy), Mode=OneWay}" Grid.Row="2"/>-->
 
     </Grid>
 </Window>

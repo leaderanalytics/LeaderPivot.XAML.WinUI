@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.ApplicationModel.DataTransfer;
+using Windows.ApplicationModel.UserDataTasks;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -309,6 +310,15 @@ public sealed partial class LeaderPivotControl : Control
         DependencyProperty.Register("DropCommand", typeof(ICommand), typeof(LeaderPivotControl), new PropertyMetadata(null));
 
 
+    public ICommand DragItemsCompletedCommand
+    {
+        get { return (ICommand)GetValue(DragItemsCompletedCommandProperty); }
+        set { SetValue(DragItemsCompletedCommandProperty, value); }
+    }
+
+    public static readonly DependencyProperty DragItemsCompletedCommandProperty =
+        DependencyProperty.Register("DragItemsCompletedCommand", typeof(ICommand), typeof(LeaderPivotControl), new PropertyMetadata(null));
+
     #endregion
 
     private byte[,]? table;
@@ -325,9 +335,9 @@ public sealed partial class LeaderPivotControl : Control
         DragItemsStartingCommand = new RelayCommand<DragItemsStartingEventArgs>(DragItemsStartingCommandHandler);
         DragOverCommand = new RelayCommand<DragEventArgs>(DragOverCommandHandler);
         DragEnterCommand = new RelayCommand<DragEventArgs>(DragEnterCommandHandler);
-        DropCommand = new RelayCommand<DragEventArgs>(DropCommandHandler);
+        DropCommand = new AsyncRelayCommand<DragEventArgs>(DropCommandHandler);
+        DragItemsCompletedCommand = new AsyncRelayCommand<DragItemsCompletedEventArgs>(DragItemsCompletedCommandHandler);
         ToggleMeasureEnabledCommand = new AsyncRelayCommand(async () => await BuildGrid(null));
-
         Loaded += OnLoaded;
     }
 
@@ -422,7 +432,14 @@ public sealed partial class LeaderPivotControl : Control
                 grid.Children.Add(container);
             }
         }
-        IsBusy = false;
+        
+        Microsoft.UI.Dispatching.DispatcherQueue.GetForCurrentThread().TryEnqueue(
+        Microsoft.UI.Dispatching.DispatcherQueuePriority.Low,
+        new Microsoft.UI.Dispatching.DispatcherQueueHandler(() =>
+        {
+           IsBusy = false;
+        }));
+        
     }
 
     public async Task DimensionEventCommandHandler(object o)
@@ -460,10 +477,6 @@ public sealed partial class LeaderPivotControl : Control
         return colIndex;
     }
 
-
-    
-
-
     private void DragItemsStartingCommandHandler(DragItemsStartingEventArgs e)
     {
         e.Data.RequestedOperation = DataPackageOperation.Move;
@@ -489,6 +502,8 @@ public sealed partial class LeaderPivotControl : Control
     private void DragOverCommandHandler(DragEventArgs e)
     {
         e.AcceptedOperation = DataPackageOperation.Move;
+        e.DragUIOverride.IsCaptionVisible = false;
+        e.DragUIOverride.IsGlyphVisible = true;
     }
 
     private void DragEnterCommandHandler(DragEventArgs e)
@@ -497,9 +512,8 @@ public sealed partial class LeaderPivotControl : Control
         
     }
 
-    private async void DropCommandHandler(DragEventArgs e)
+    private async Task DropCommandHandler(DragEventArgs e)
     {
-        // https://github.com/dotnet/maui/issues/13770
         ListView dropTarget = e.OriginalSource as ListView;
         Dimension sourceDimension = e.Data.Properties["Dimension"] as Dimension;
         DragOperationDeferral def = e.GetDeferral();
@@ -561,6 +575,26 @@ public sealed partial class LeaderPivotControl : Control
 
         e.AcceptedOperation = DataPackageOperation.Move;
         def.Complete();
+        await BuildGrid(null);
+    }
+
+    private async Task DragItemsCompletedCommandHandler(DragItemsCompletedEventArgs e)
+    {
+        if (e.DropResult == DataPackageOperation.None)
+            return;
+
+        Dimension dim = e.Items.Cast<Dimension>().First();
+        IList<Dimension> source = dim.IsRow ? ViewBuilder.RowDimensions : ViewBuilder.ColumnDimensions; 
+        int index = source.IndexOf(dim);
+        
+        if (dim.Sequence == index)
+            return;
+
+        dim.Sequence = index;
+
+        foreach (Dimension d in source.Where(x => x != dim && x.Sequence >= index))
+            d.Sequence++;
+
         await BuildGrid(null);
     }
 }

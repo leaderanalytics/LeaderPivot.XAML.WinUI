@@ -268,7 +268,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="local:DimensionButton">
-                    <DropDownButton 
+                    <DropDownButton  
                         Content="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Dimension.DisplayValue}"
                         Style="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=ButtonStyle}">
                         <DropDownButton.Flyout>
@@ -339,7 +339,7 @@
                                 CanDragItems="True" 
                                 CanReorderItems="True" 
                                 AllowDrop="True" 
-                                SelectionMode="Single">
+                                SelectionMode="Single" MinHeight="60" >
                                 <ListView.ItemTemplate>
                                     <DataTemplate>
                                         <local:DimensionButton 
@@ -351,7 +351,7 @@
                                 </ListView.ItemTemplate>
                                 <ListView.ItemsPanel>
                                     <ItemsPanelTemplate>
-                                        <StackPanel Orientation="Horizontal" AllowDrop="True"  Spacing="-20" ></StackPanel>
+                                        <ItemsStackPanel Orientation="Horizontal" AllowDrop="True"  ></ItemsStackPanel>
                                     </ItemsPanelTemplate>
                                 </ListView.ItemsPanel>
                                 <Interactivity:Interaction.Behaviors>
@@ -370,6 +370,12 @@
                                     <Interactions:EventTriggerBehavior EventName="Drop">
                                         <Interactions:InvokeCommandAction 
                                                             Command="{Binding (ui:FrameworkElementExtensions.Ancestor).DropCommand, ElementName=layoutRoot}">
+                                        </Interactions:InvokeCommandAction>
+                                    </Interactions:EventTriggerBehavior>
+
+                                    <Interactions:EventTriggerBehavior EventName="DragItemsCompleted">
+                                        <Interactions:InvokeCommandAction 
+                                                            Command="{Binding (ui:FrameworkElementExtensions.Ancestor).DragItemsCompletedCommand, ElementName=layoutRoot}">
                                         </Interactions:InvokeCommandAction>
                                     </Interactions:EventTriggerBehavior>
                                 </Interactivity:Interaction.Behaviors>

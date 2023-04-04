@@ -1,20 +1,36 @@
-# Introduction 
-TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project. 
+![Leader Analytics](./logo.png)
+
+
+
+# LeaderPivot.XAML.WinUI
+
+Pivot grid control for WinUI.
+
+* Easy to implement and configure
+* Drag and drop dimensions across axis
+* User configurable measures
+* Two color themes provided, customize or create your own.
+
+
+![Leader Analytics pivot grid control](./screencap.png) 
 
 # Getting Started
-TODO: Guide users through getting your code up and running on their own system. In this section you can talk about:
-1.	Installation process
-2.	Software dependencies
-3.	Latest releases
-4.	API references
 
-# Build and Test
-TODO: Describe and show how to build your code and run the tests. 
+* Clone this repository and run the demo application.  This repository contains source code for the control as well as a small demo application.
 
-# Contribute
-TODO: Explain how other users and developers can contribute to make your code better. 
+* [Get the test data application](https://github.com/leaderanalytics/LeaderPivot.TestData)
 
-If you want to learn more about creating good readme files then refer the following [guidelines](https://docs.microsoft.com/en-us/azure/devops/repos/git/create-a-readme?view=azure-devops). You can also seek inspiration from the below readme files:
-- [ASP.NET Core](https://github.com/aspnet/Home)
-- [Visual Studio Code](https://github.com/Microsoft/vscode)
-- [Chakra Core](https://github.com/Microsoft/ChakraCore)
+* A nuget package for LeaderPivot.XAML.WinUI is not available because it is not [reasonably supported](https://learn.microsoft.com/en-us/windows/uwp/winrt-components/creating-windows-runtime-components-in-csharp-and-visual-basic#declaring-types-in-windows-runtime-components).
+
+* Create a data structure to model your denormalized data.  See the [`SalesData`](https://github.com/leaderanalytics/LeaderPivot.TestData/blob/main/LeaderPivot.TestData/SalesData.cs) class for an example.
+
+* Create [Dimensions](https://github.com/leaderanalytics/LeaderPivot/blob/main/LeaderPivot/Dimension.cs) and [Measures](https://github.com/leaderanalytics/LeaderPivot/blob/main/LeaderPivot/Measure.cs).    Dimensions are used to group data.  Measures are used to create the values shown in each cell of the pivot table.  Examples are provided in the [TestData](https://github.com/leaderanalytics/LeaderPivot.TestData/blob/main/LeaderPivot.TestData/SalesData.cs) project.
+
+* Add a [LeaderPivot control](https://github.com/leaderanalytics/LeaderPivot.XAML.WPF/blob/main/LeaderPivot.XAML.WPF.Host/MainWindow.xaml) to your page.  
+
+This control is based on [LeaderPivot](https://github.com/leaderanalytics/LeaderPivot).
+
+An implementation for WPF can be found [here](https://github.com/leaderanalytics/LeaderPivot.Blazor).
+
+An implementation for Blazor can be found [here](https://github.com/leaderanalytics/LeaderPivot.Blazor).
+

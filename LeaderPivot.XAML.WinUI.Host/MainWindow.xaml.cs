@@ -30,6 +30,9 @@ public sealed partial class MainWindow : Window
     public MainWindow()
     {
         this.InitializeComponent();
+        Title = "LeaderPivot for WinUI";
         VM = new MainWindowViewModel();
     }
+
+    
 }
