@@ -383,7 +383,7 @@ public sealed partial class LeaderPivotControl : Control
 
             for (int j = 0; j < ViewBuilder.Matrix.Rows[i].Cells.Count; j++)
             {
-                MatrixCell? mCell = ViewBuilder.Matrix.Rows[i].Cells[j];
+                IMatrixCell? mCell = ViewBuilder.Matrix.Rows[i].Cells[j];
 
                 BaseCell cell = mCell.CellType switch
                 {
