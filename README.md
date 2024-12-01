@@ -32,3 +32,7 @@ LeaderPivot for WPF can be found [here](https://github.com/leaderanalytics/Leade
 
 LeaderPivot for Blazor can be found [here](https://github.com/leaderanalytics/LeaderPivot.Blazor).
 
+
+Release Notes:
+Version 2 - dotnet 9
+Version 1 - dotnet 8
